@@ -1,0 +1,75 @@
+.chroniton .legendLinear text {
+    font-size: 10px;
+    font-weight: 100;
+}
+
+.chroniton text {
+    font-size: 10px;
+    color: gray;
+}
+
+.axis text, .aside {
+  font-size: 10px;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.chroniton .x.axis,
+.slider text {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+.chroniton .x.axis path.domain {
+    stroke-width: 10;
+    stroke-linecap: square;
+    stroke: #BFBFBF;
+    stroke-opacity: 0.5;
+}
+
+.chroniton .x.axis path.halo {
+    stroke-width: 12;
+    stroke-linecap: square;
+    stroke: #BFBFBF;
+    stroke-opacity:0.3;
+}
+
+.chroniton .tick line {
+    stroke: white;
+    stroke-width: 1;
+    transform: translate(0px, -5px);
+}
+
+.slider .handle {
+    fill: white;
+    stroke-width: 1;
+    stroke: #333;
+}
+
+.slider .handle,
+.slider text {
+    cursor: move;
+    cursor: -webkit-grab;
+    transition: fill 10 linear;
+}
+
+.handle:active,
+.slider text:active {
+    cursor: move;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+.slider.brushing .handle {
+    fill: #eee;
+}
+
+.chroniton .label {
+    font: 11px sans-serif;
+}

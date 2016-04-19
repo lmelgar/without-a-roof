@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------
-Scatter: median income & stamp_children_rate
+Scatter: hispanic under 18 & perc_foodstamp
 --------------------------------------------------------------------------*/
 
 (function() {
@@ -41,7 +41,7 @@ Scatter: median income & stamp_children_rate
   Scale, Axis Variables & Setup
   --------------------------------------------------------------------------*/
 
-  var xMax = 580;
+  var xMax = 65;
   var yMax = 70;
 
   var xScale = d3.scale.linear()
@@ -136,7 +136,7 @@ Scatter: median income & stamp_children_rate
               }
             })
             .attr("opacity", function (d) {
-              if ((d.stamp_children_rate) && (d.under18hisp_perc)) {
+              if ((d.perc_foodstamp) && (d.under18hisp_perc)) {
                 return dotOpacity;
               } else {
                 return 0;
@@ -216,7 +216,7 @@ Scatter: median income & stamp_children_rate
       .attr("dy", "1em")
       .style("text-anchor", "end")
       .attr("class", "label")
-      .text("CHILDREN RECEIVING FOOD STAMPS (PER EVERY 1,000 CHILDREN)");
+      .text("CHILDREN RECEIVING FOOD STAMPS (%)");
 
       svg.append("g")
       .attr("class", "y axis")
@@ -230,7 +230,7 @@ Scatter: median income & stamp_children_rate
       .attr("dy", "0.2em")
       .style("text-anchor", "end")
       .attr("class", "label")
-      .text("Hispanics under 18");
+      .text("Hispanics under 18 (%)");
     }
 
 
@@ -254,8 +254,8 @@ Scatter: median income & stamp_children_rate
       .attr("class", "dots");
 
       circles.attr("cx", function (d) {
-        if (!isNaN(d.stamp_children_rate)) {
-          return xScale(+d.stamp_children_rate);
+        if (!isNaN(d.perc_foodstamp)) {
+          return xScale(+d.perc_foodstamp);
         }
       })
       .attr("cy", function (d) {
@@ -277,7 +277,7 @@ Scatter: median income & stamp_children_rate
         }
       })
       .attr("opacity", function (d) {
-        if ((d.stamp_children_rate) && (d.under18hisp_perc)) {
+        if ((d.perc_foodstamp) && (d.under18hisp_perc)) {
           return dotOpacity;
         } else {
           return 0;
@@ -320,7 +320,7 @@ Scatter: median income & stamp_children_rate
     console.log(circles);
 
     circles.attr("fill", function (d) {
-      if (!(d.under18hisp_perc) || !(d.stamp_children_rate)) {
+      if (!(d.under18hisp_perc) || !(d.perc_foodstamp)) {
         return "rgba(0, 0, 0, 0)";
       } else {
         if (d.selection == "Top") {
@@ -343,8 +343,8 @@ Scatter: median income & stamp_children_rate
     .duration(100)
     .ease("quad")
     .attr("cx", function (d) {
-      if (!isNaN(d.stamp_children_rate)) {
-        return xScale(+d.stamp_children_rate);
+      if (!isNaN(d.perc_foodstamp)) {
+        return xScale(+d.perc_foodstamp);
       }
     })
     .attr("cy", function (d) {
@@ -366,7 +366,7 @@ Scatter: median income & stamp_children_rate
       }
     })
     .attr("opacity", function (d) {
-      if ((d.under18hisp_perc) && (d.stamp_children_rate)) {
+      if ((d.under18hisp_perc) && (d.perc_foodstamp)) {
         return dotOpacity;
       } else {
         return 0;
@@ -405,7 +405,7 @@ Scatter: median income & stamp_children_rate
     .html("<p>" + "<span>" + d.county + "</span>" +
     "<br> Homeless students: " + "<em>" + d.perc_homeless + "%</em>" +
     "<br> Hispanics under 18: " + "<em>" + d.under18hisp_perc + "%</em>" +
-    "<br>Children receiving food stamps (per every 1,000 children): <em>" + d3.format("")(d.stamp_children_rate) + "</em>" + "</p>");
+    "<br>Children receiving food stamps: <em>" + d.perc_foodstamp + "%</em>" + "</p>");
 
 
     d3.selection.prototype.moveToFront = function() {

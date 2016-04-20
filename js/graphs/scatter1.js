@@ -104,21 +104,29 @@ Scatter: median income & unemployment
 
     console.log("datos", data);
 
+    var bycounty = d3.nest()
+       .key(function (d) {
+         return d.county;
+       })
+       .entries(data);
 
     /*dropdown*/
     var options = dropDown.selectAll("option")
-             .data([{county:"All"}].concat(data))
+             .data([{key:"All"}].concat(bycounty))
              .enter()
              .append("option");
 
 
-    options.text(function (d) { return d.county; })
-    .attr("value", function (d) { return d.county; });
+    options.text(function (d) { return d.key; })
+    .attr("value", function (d) { return d.key; });
 
     dropDown.on("change", function() {
       var selected = this.value;
       displayOthers = this.checked ? "inline" : "none";
       display = this.checked ? "none" : "inline";
+
+      // d3.selectAll("circles").classed("selected", false);
+    //  d3.select("circle#" + selected).classed("selected", true);
 
       if(selected == 'All'){
         svg.selectAll(".dots")

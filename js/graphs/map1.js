@@ -107,7 +107,7 @@ Scatter: median income & stamp_children_rate
           item.classed("btn-selected", true);
           item.classed(item.attr("id"), true);
           updateFill(current);
-          d3.select("h2#chartLabel").text("" + label);
+          /*(d3.select("h2#chartLabel").text("" + label);*/
       });
   console.log("data", data);
 
@@ -167,10 +167,11 @@ Scatter: median income & stamp_children_rate
 
       var data = idLookup.get(d.id);
 
+      // if (selected == "diagnoses") {
       myTooltip2
         .style("display", null) // this removes the display none setting from it
         .html("<p>" + data[current] + " diagnoses per 100,000 people in " + data.county + ", " + data.state +"</p>");
-
+    //  } else { }
     }
 
     function mousemove(d) {

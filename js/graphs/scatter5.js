@@ -70,6 +70,7 @@ Scatter: under 18 african american & perc_foodstamp
 
   /*dropdown*/
   var dropDown = d3.select("#filter5").append("select")
+                  .attr("class", "menu")
                   .attr("name", "county-list");
 
 

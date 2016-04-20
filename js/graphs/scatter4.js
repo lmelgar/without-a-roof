@@ -70,6 +70,7 @@ Scatter: hispanic under 18 & perc_foodstamp
 
   /*dropdown*/
   var dropDown = d3.select("#filter4").append("select")
+                  .attr("class", "menu")
                   .attr("name", "county-list");
 
 

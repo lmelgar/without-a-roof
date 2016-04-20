@@ -70,6 +70,7 @@ Scatter: homeless perc & under18bk_perc
 
   /*dropdown*/
   var dropDown = d3.select("#filter8").append("select")
+                  .attr("class", "menu")
                   .attr("name", "county-list");
 
 

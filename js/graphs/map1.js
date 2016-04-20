@@ -11,8 +11,8 @@ Scatter: median income & stamp_children_rate
 
   // use a d3 map to make a lookup table for the string in the chart title
   var chartLabels = d3.map();
-    chartLabels.set("homeless_pop", "total homeless student");
-    chartLabels.set("perc_homeless", "percentage of homeless students");
+    chartLabels.set("homeless_pop", "Total homeless student");
+    chartLabels.set("perc_homeless", "Percentage of homeless students");
 
 
   // Not going to lie, there's a ton of trial and error here.
@@ -91,7 +91,7 @@ Scatter: median income & stamp_children_rate
   d3.selectAll(".btn")
       .on("click", function() {
           var item = d3.select(this);
-          d3.selectAll("#buttons .btn").classed("btn-active", false);
+          d3.selectAll("#buttons .btn").classed("btn-selected", false);
           current = item.attr("id");
           colorScale.domain(d3.extent(data, function(d) { return +d[current];}));
 
@@ -104,7 +104,7 @@ Scatter: median income & stamp_children_rate
               .call(legendColors);
 
           var label = chartLabels.get(current);
-          item.classed("btn-active", true);
+          item.classed("btn-selected", true);
           item.classed(item.attr("id"), true);
           updateFill(current);
           d3.select("h2#chartLabel").text("" + label);

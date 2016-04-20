@@ -70,6 +70,7 @@ Scatter: median income & unemployment
 
   /*dropdown*/
   var dropDown = d3.select("#filter2").append("select")
+                  .attr("class", "menu")
                   .attr("name", "county-list");
 
 

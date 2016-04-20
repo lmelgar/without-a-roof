@@ -70,6 +70,7 @@ Scatter: median income & under18hisp_perc
 
   /*dropdown*/
   var dropDown = d3.select("#filter9").append("select")
+                  .attr("class", "menu")
                   .attr("name", "county-list");
 
 

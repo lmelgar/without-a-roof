@@ -70,6 +70,7 @@ Scatter: change median income & perc_foodstamp
 
   /*dropdown*/
   var dropDown = d3.select("#filter3").append("select")
+                  .attr("class", "menu")
                   .attr("name", "county-list");
 
 

@@ -70,6 +70,7 @@ Scatter: median income & stamp_children_rate
 
   /*dropdown*/
   var dropDown = d3.select("#filter7").append("select")
+                  .attr("class", "menu")
                   .attr("name", "county-list");
 
 

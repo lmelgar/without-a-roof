@@ -1,5 +1,8 @@
 /*--------------------------------------------------------------------------
 Scatter: level of maths & perc_foodstamp
+
+This graphic is based on a project by HALINA MADER: http://hmader.github.io/fertility-mortality/index.html
+She is really talented. In case you wanna see what she can do: http://halinamader.com/
 --------------------------------------------------------------------------*/
 
 (function() {
@@ -105,15 +108,21 @@ Scatter: level of maths & perc_foodstamp
     console.log("datos", data);
 
 
+    var bycounty = d3.nest()
+       .key(function (d) {
+         return d.county;
+       })
+       .entries(data);
+
     /*dropdown*/
     var options = dropDown.selectAll("option")
-             .data([{county:"All"}].concat(data))
+             .data([{key:"All"}].concat(bycounty))
              .enter()
              .append("option");
 
 
-    options.text(function (d) { return d.county; })
-    .attr("value", function (d) { return d.county; });
+    options.text(function (d) { return d.key; })
+    .attr("value", function (d) { return d.key; });
 
     dropDown.on("change", function() {
       var selected = this.value;
@@ -216,7 +225,7 @@ Scatter: level of maths & perc_foodstamp
       .attr("y", 30)
       .attr("dy", "1em")
       .style("text-anchor", "end")
-      .attr("class", "label")
+      .attr("class", "label_sca")
       .text("CHILDREN RECEIVING FOOD STAMPS (%)");
 
       svg.append("g")
@@ -230,8 +239,8 @@ Scatter: level of maths & perc_foodstamp
       .attr("y", -45)
       .attr("dy", "0.2em")
       .style("text-anchor", "end")
-      .attr("class", "label")
-      .text("Students achieving a level higher than 3 in maths (%)");
+      .attr("class", "label_sca")
+      .text("Students who scored 3 or more in maths (%)");
     }
 
 
@@ -405,7 +414,7 @@ Scatter: level of maths & perc_foodstamp
     .style("display", null) // this removes the display none setting from it
     .html("<p>" + "<span>" + d.county + "</span>" +
     "<br> Homeless students: " + "<em>" + d.perc_homeless + "%</em>" +
-    "<br> Students achieving a level higher than 3 in maths: " + "<em>" + d.level3highermath_perc + "%</em>" +
+    "<br> Students who scored 3 or more in maths: " + "<em>" + d.level3highermath_perc + "%</em>" +
     "<br>Children receiving food stamps: <em>" + d.perc_foodstamp + "%</em>" + "</p>");
 
 

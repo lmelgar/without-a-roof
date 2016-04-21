@@ -125,8 +125,18 @@ Scatter: median income & unemployment
       displayOthers = this.checked ? "inline" : "none";
       display = this.checked ? "none" : "inline";
 
-      // d3.selectAll("circles").classed("selected", false);
-    //  d3.select("circle#" + selected).classed("selected", true);
+    /*d3.selectAll("circles").classed("selected", false);
+    d3.select("circle#" + selected).classed("selected", true);*/
+
+    /*circles.on("click", function () {
+        d3.select(".selected").classed("selected", false);
+        d3.select(this).classed("selected", true);
+
+        })
+
+      d3.selectAll("circle").classed("selected", false);
+							circles.classed("selected", true);*/
+
 
       if(selected == 'All'){
         svg.selectAll(".dots")
@@ -224,7 +234,7 @@ Scatter: median income & unemployment
       .attr("y", 30)
       .attr("dy", "1em")
       .style("text-anchor", "end")
-      .attr("class", "label")
+      .attr("class", "label_sca")
       .text("Unemployment");
 
       svg.append("g")
@@ -238,7 +248,7 @@ Scatter: median income & unemployment
       .attr("y", -45)
       .attr("dy", "0.2em")
       .style("text-anchor", "end")
-      .attr("class", "label")
+      .attr("class", "label_sca")
       .text("Median income");
     }
 

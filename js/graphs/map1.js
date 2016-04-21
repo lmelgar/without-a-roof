@@ -1,5 +1,7 @@
 /*--------------------------------------------------------------------------
-Scatter: median income & stamp_children_rate
+Map: total population and percentage
+
+This code is based on http://bl.ocks.org/CafeConVega/65d4fb217d2127e30e37093c3a138610
 --------------------------------------------------------------------------*/
 
 (function() {
@@ -91,32 +93,32 @@ Scatter: median income & stamp_children_rate
   d3.selectAll(".btn")
       .on("click", function() {
           var item = d3.select(this);
-          d3.selectAll("#buttons .btn").classed("btn-selected", false);
+          d3.selectAll("#buttons .btn").classed("selected", false);
           current = item.attr("id");
           colorScale.domain(d3.extent(data, function(d) { return +d[current];}));
 
           legendColors = d3.legend.color()
-              .shapeWidth(20)
+              .shapeWidth(15)
               .labelFormat(d3.format(",.0f"))
               .scale(colorScale); // our existing color scale
 
               svg.select(".legendColors")
               .call(legendColors);
 
+
           var label = chartLabels.get(current);
-          item.classed("btn-selected", true);
+          item.classed("selected", true);
           item.classed(item.attr("id"), true);
           updateFill(current);
-          /*(d3.select("h2#chartLabel").text("" + label);*/
       });
   console.log("data", data);
 
    svg.append("g")
       .attr("class", "legendColors")
-          .attr("transform", "translate(100, 175)"); // where we put it on the page!
+          .attr("transform", "translate(15, 125)"); // where we put it on the page!
 
       var legendColors = d3.legend.color()
-      .shapeWidth(20)
+      .shapeWidth(15)
       .labelFormat(d3.format(",.0f"))
       .scale(colorScale); // our existing color scale
 
@@ -144,6 +146,7 @@ Scatter: median income & stamp_children_rate
         });
     }
 
+
     function typeAndSet(d) {
       // create the lookup hash for the county id in the map (id) and data (fipstxt)
       idLookup.set(+d.FIPStxt, d);
@@ -156,6 +159,8 @@ Scatter: median income & stamp_children_rate
       });
     };
 
+
+
   function mouseover(d) {
 
       d3.select(this)
@@ -167,11 +172,16 @@ Scatter: median income & stamp_children_rate
 
       var data = idLookup.get(d.id);
 
-      // if (selected == "diagnoses") {
+      if (current == "homeless_pop") {
       myTooltip2
         .style("display", null) // this removes the display none setting from it
-        .html("<p>" + data[current] + " diagnoses per 100,000 people in " + data.county + ", " + data.state +"</p>");
-    //  } else { }
+        .html("<p><em>" + data.county + "<br></em> In 2013, the population of <br> homeless student was <em>" + d3.format(",.0f")(data[current]) + "</em></p>");
+      } else {
+
+      myTooltip2
+      .style("display", null) // this removes the display none setting from it
+      .html("<p><em>" + data.county + "<br></em> In 2013, the percentage of <br> homeless student was <em>" + data[current] + "%</em></p>");
+    }
     }
 
     function mousemove(d) {
@@ -189,5 +199,7 @@ Scatter: median income & stamp_children_rate
 
       myTooltip2.style("display", "none");  // this sets it to invisible!
     }
+
+  d3.select("button#homeless_pop").classed("selected", true);
 
 })();

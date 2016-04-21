@@ -1,5 +1,8 @@
 /*--------------------------------------------------------------------------
 Scatter: median income & stamp_children_rate
+
+This graphic is based on a project by HALINA MADER: http://hmader.github.io/fertility-mortality/index.html
+She is really talented. In case you wanna see what she can do: http://halinamader.com/
 --------------------------------------------------------------------------*/
 
 (function() {
@@ -105,15 +108,21 @@ Scatter: median income & stamp_children_rate
     console.log("datos", data);
 
 
+    var bycounty = d3.nest()
+       .key(function (d) {
+         return d.county;
+       })
+       .entries(data);
+
     /*dropdown*/
     var options = dropDown.selectAll("option")
-             .data([{county:"All"}].concat(data))
+             .data([{key:"All"}].concat(bycounty))
              .enter()
              .append("option");
 
 
-    options.text(function (d) { return d.county; })
-    .attr("value", function (d) { return d.county; });
+    options.text(function (d) { return d.key; })
+    .attr("value", function (d) { return d.key; });
 
     dropDown.on("change", function() {
       var selected = this.value;
@@ -216,7 +225,7 @@ Scatter: median income & stamp_children_rate
       .attr("y", 30)
       .attr("dy", "1em")
       .style("text-anchor", "end")
-      .attr("class", "label")
+      .attr("class", "label_sca")
       .text("Children receiving food stamps (per every 1,000 children)");
 
       svg.append("g")
@@ -230,7 +239,7 @@ Scatter: median income & stamp_children_rate
       .attr("y", -45)
       .attr("dy", "0.2em")
       .style("text-anchor", "end")
-      .attr("class", "label")
+      .attr("class", "label_sca")
       .text("Median income");
     }
 

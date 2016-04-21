@@ -52,8 +52,8 @@ nav {
 
 .navbar-brand {
   text-transform: uppercase;
-  margin-right: 10px;
-  padding-left: 10px;
+  margin-right: 40px;
+  padding-left: 30px;
 
 }
 
@@ -62,6 +62,16 @@ nav {
   max-width: 960px;
   margin: 0 auto;
   margin-bottom: 20px;
+}
+
+#lang div {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-right: 10px;
+}
+
+#lang p {
+  margin-bottom: 0px;
 }
 
 .intro {
@@ -197,10 +207,12 @@ h5 {
 li a {
   text-decoration: none;
   box-shadow: none;
+  font-weight: 300;
 }
 
 li a:active {
   color: #B75C57;
+  font-weight: 300;
   text-decoration: none;
   box-shadow: none;
 }
@@ -209,23 +221,27 @@ li a:visited {
   color: #B75C57;
   text-decoration: none;
   box-shadow: none;
+  font-weight: 300;
 }
 
 li a:hover {
   color: black;
   text-decoration: none;
   box-shadow: none;
+  font-weight: 300;
 }
 
 
 a, a:visited {
+  font-weight: 400;
   color: black;
   color: #B75C57;
+  text-decoration: none;
 }
 
 a:hover {
-  color: black;
-  color: #B75C57;
+  color: #4C4B4D;
+  text-decoration: none;
 }
 
 
@@ -248,7 +264,7 @@ a:hover {
 }
 
 li {
-  margin-right: 10px;
+  margin-right: 15px;
   font-size: 16px;
 }
 
@@ -362,14 +378,15 @@ button {
 
 .btn-sm {
   color: rgb(30,31,29);
+  width: 100px;
   border: 1px solid grey;
   outline: 0 !important;
   padding: 6px;
   margin-bottom: 20px;
 }
 
-btn-selected {
-  background-color: pink;
+.selected {
+  background-color: #D7A6A1;
   border: 1px solid white;
   outline: 0 !important;
 }
@@ -392,12 +409,10 @@ strong {
   font-weight: 600;
 }
 
-
-@media (min-width: 830px) {
-   .collapse {
-       display: none !important;
-   }
+#head p {
+  text-align: right;
 }
+
 
 
 @media (max-width: 991px) {
@@ -424,6 +439,13 @@ strong {
 
   h4 {
     width:27%;
+  }
+
+  #lang div {
+    margin: 0;
+    float: right;
+    padding: 0;
+    padding-right: 5px;
   }
 
 }

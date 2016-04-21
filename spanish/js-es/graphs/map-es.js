@@ -13,8 +13,8 @@ This code is based on http://bl.ocks.org/CafeConVega/65d4fb217d2127e30e37093c3a1
 
   // use a d3 map to make a lookup table for the string in the chart title
   var chartLabels = d3.map();
-    chartLabels.set("homeless_pop", "Total homeless student");
-    chartLabels.set("perc_homeless", "Percentage of homeless students");
+    chartLabels.set("homeless_pop", "Población de estudiantes sin hogar");
+    chartLabels.set("perc_homeless", "Porcentaje de estudiantes sin hogar");
 
 
   // Not going to lie, there's a ton of trial and error here.
@@ -43,8 +43,8 @@ This code is based on http://bl.ocks.org/CafeConVega/65d4fb217d2127e30e37093c3a1
 
   // we use queue because we have 2 data files to load.
   queue()
-    .defer(d3.json, "data/us_counties_topo.json")
-    .defer(d3.csv, "data/dataSet2013.csv", typeAndSet) // process
+    .defer(d3.json, "../data/us_counties_topo.json")
+    .defer(d3.csv, "../data/dataSet2013.csv", typeAndSet) // process
     .await(loaded);
 
   function loaded(error, us, data) {
@@ -175,12 +175,12 @@ This code is based on http://bl.ocks.org/CafeConVega/65d4fb217d2127e30e37093c3a1
       if (current == "homeless_pop") {
       myTooltip2
         .style("display", null) // this removes the display none setting from it
-        .html("<p><em>" + data.county + "<br></em>In 2013, the population of <br> homeless student was <em>" + d3.format(",.0f")(data[current]) + "</em></p>");
+        .html("<p><em>" + data.county + "<br></em>Población de estudiantes <br> sin hogar en 2013: <em>" + d3.format(",.0f")(data[current]) + "</em></p>");
       } else {
 
       myTooltip2
       .style("display", null) // this removes the display none setting from it
-      .html("<p><em>" + data.county + "<br></em>In 2013, the percentage of <br> homeless student was <em>" + data[current] + "%</em></p>");
+      .html("<p><em>" + data.county + "<br></em>Porcentaje de estudiantes <br> sin hogar en 2013: <em>" + data[current] + "%</em></p>");
     }
     }
 

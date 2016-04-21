@@ -103,7 +103,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
   var slider;
 
 
-  d3.csv("data/dataSet.csv", function(error, data) {
+  d3.csv("../data/dataSet.csv", function(error, data) {
 
     console.log("datos", data);
 
@@ -116,7 +116,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
 
     /*dropdown*/
     var options = dropDown.selectAll("option")
-             .data([{key:"All"}].concat(bycounty))
+             .data([{key:"Todos"}].concat(bycounty))
              .enter()
              .append("option");
 
@@ -129,7 +129,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       displayOthers = this.checked ? "inline" : "none";
       display = this.checked ? "none" : "inline";
 
-      if(selected == 'All'){
+      if(selected == 'Todos'){
         svg.selectAll(".dots")
             .attr("display", display);
       }
@@ -226,7 +226,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .attr("dy", "1em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("African Americans under 18 (%)");
+      .text("Afro americanos menores de 18 (%)");
 
       svg.append("g")
       .attr("class", "y axis")
@@ -240,7 +240,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .attr("dy", "0.2em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("Homeles students (%)");
+      .text("Estudiantes sin hogar (%)");
     }
 
 
@@ -407,14 +407,14 @@ She is really talented. In case you wanna see what she can do: http://halinamade
   .attr("dx", "-4em")
   .attr("y", width)
   .attr("x", height / 100)
-  .text("Homeless students (%)");
+  .text("Estudiantes sin hogar (%)");
 
   function mouseoverFunc(d) {
     myTooltip2
     .style("display", null) // this removes the display none setting from it
     .html("<p>" + "<span>" + d.county + "</span>" +
-    "<br>Homeless students: " + "<em>" + (d.perc_homeless) + "%</em>" +
-    "<br>African Americans under 18: <em>" + d.under18bk_perc + "%</em>" + "</p>");
+    "<br>Estudiantes sin hogar: " + "<em>" + (d.perc_homeless) + "%</em>" +
+    "<br>Afro americanos menores de 18: <em>" + d.under18bk_perc + "%</em>" + "</p>");
 
 
     d3.selection.prototype.moveToFront = function() {

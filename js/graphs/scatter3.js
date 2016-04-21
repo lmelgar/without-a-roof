@@ -415,7 +415,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
     .html("<p>" + "<span>" + d.county + "</span>" +
     "<br> Homeless students: " + "<em>" + d.perc_homeless + "%</em>" +
     "<br> Change in median income: " + "<em>" + d.change_median_income + "%</em>" +
-    "<br>Children receiving food stamps (%): <em>" + d.perc_foodstamp + "%</em>" + "</p>");
+    "<br>Children receiving food stamps: <em>" + d.perc_foodstamp + "%</em>" + "</p>");
 
 
     d3.selection.prototype.moveToFront = function() {

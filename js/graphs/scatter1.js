@@ -235,7 +235,7 @@ Scatter: median income & unemployment
       .attr("dy", "1em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("Unemployment");
+      .text("Unemployment (%)");
 
       svg.append("g")
       .attr("class", "y axis")

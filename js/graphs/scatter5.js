@@ -240,7 +240,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .attr("dy", "0.2em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("African American under 18 (%)");
+      .text("African Americans under 18 (%)");
     }
 
 
@@ -414,7 +414,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
     .style("display", null) // this removes the display none setting from it
     .html("<p>" + "<span>" + d.county + "</span>" +
     "<br> Homeless students: " + "<em>" + d.perc_homeless + "%</em>" +
-    "<br>African American under 18: " + "<em>" + d.under18bk_perc + "%</em>" +
+    "<br>African Americans under 18: " + "<em>" + d.under18bk_perc + "%</em>" +
     "<br>Children receiving food stamps: " + "<em>" + d.perc_foodstamp + "%</em>" + "</p>");
 
 

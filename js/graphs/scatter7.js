@@ -413,8 +413,8 @@ She is really talented. In case you wanna see what she can do: http://halinamade
     myTooltip2
     .style("display", null) // this removes the display none setting from it
     .html("<p>" + "<span>" + d.county + "</span>" +
-    "<br> Homeless students: " + "<em>" + d.perc_homeless + "%</em>" +
-    "<br> Students who scored 3 or more in maths: " + "<em>" + d.level3highermath_perc + "%</em>" +
+    "<br>Homeless students: " + "<em>" + d.perc_homeless + "%</em>" +
+    "<br>Students who scored 3 or more in maths: " + "<em>" + d.level3highermath_perc + "%</em>" +
     "<br>Children receiving food stamps: <em>" + d.perc_foodstamp + "%</em>" + "</p>");
 
 

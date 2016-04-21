@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------
-Scatter: homeless perc & under18bk_perc
+Scatter: median income & under18hisp_perc
 
 This graphic is based on a project by HALINA MADER: http://hmader.github.io/fertility-mortality/index.html
 She is really talented. In case you wanna see what she can do: http://halinamader.com/
@@ -30,7 +30,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
 
   var dotRadius = d3.scale.sqrt()
   .domain([0, 22])
-  .range([0, 22]);
+  .range([0, 20]);
 
   var dotOpacity = .7;
   var startYear = 2005,
@@ -67,12 +67,12 @@ She is really talented. In case you wanna see what she can do: http://halinamade
   xScale.domain([0, xMax]);
   yScale.domain([yMax, 0]);
 
-  svg = d3.select("#vis8").append("svg")
+  svg = d3.select("#vis9").append("svg")
   .attr("viewBox", "0 0 " + width + " " + height )
   .attr("preserveAspectRatio", "xMinYMin slice");
 
   /*dropdown*/
-  var dropDown = d3.select("#filter8").append("select")
+  var dropDown = d3.select("#filter9").append("select")
                   .attr("class", "menu")
                   .attr("name", "county-list");
 
@@ -88,7 +88,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
 
 
   function drawSlider() {
-    d3.select("#slider8").append('div')
+    d3.select("#slider9").append('div')
     .call(slider);
     sliderOkay = true;
   }
@@ -103,7 +103,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
   var slider;
 
 
-  d3.csv("data/dataSet.csv", function(error, data) {
+  d3.csv("../data/dataSet.csv", function(error, data) {
 
     console.log("datos", data);
 
@@ -116,7 +116,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
 
     /*dropdown*/
     var options = dropDown.selectAll("option")
-             .data([{key:"All"}].concat(bycounty))
+             .data([{key:"Todos"}].concat(bycounty))
              .enter()
              .append("option");
 
@@ -129,7 +129,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       displayOthers = this.checked ? "inline" : "none";
       display = this.checked ? "none" : "inline";
 
-      if(selected == 'All'){
+      if(selected == 'Todos'){
         svg.selectAll(".dots")
             .attr("display", display);
       }
@@ -146,7 +146,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
               }
             })
             .attr("opacity", function (d) {
-              if ((d.under18bk_perc) && (d.perc_homeless)) {
+              if ((d.under18hisp_perc) && (d.perc_homeless)) {
                 return dotOpacity;
               } else {
                 return 0;
@@ -171,7 +171,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
 
 
     }
-    var swidth = parseInt(d3.select('#slider8').style('width'),10);
+    var swidth = parseInt(d3.select('#slider9').style('width'),10);
     slider = chroniton()
     .domain([dateFormat.parse("2005"), dateFormat.parse("2013")])
     .labelFormat(d3.time.format('%Y'))
@@ -226,7 +226,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .attr("dy", "1em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("African Americans under 18 (%)");
+      .text("Hispanos menores de 18 (%)");
 
       svg.append("g")
       .attr("class", "y axis")
@@ -240,7 +240,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .attr("dy", "0.2em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("Homeles students (%)");
+      .text("Estudiantes sin hogar (%)");
     }
 
 
@@ -264,8 +264,8 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .attr("class", "dots");
 
       circles.attr("cx", function (d) {
-        if (!isNaN(d.under18bk_perc)) {
-          return xScale(+d.under18bk_perc);
+        if (!isNaN(d.under18hisp_perc)) {
+          return xScale(+d.under18hisp_perc);
         }
       })
       .attr("cy", function (d) {
@@ -287,7 +287,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
         }
       })
       .attr("opacity", function (d) {
-        if ((d.under18bk_perc) && (d.perc_homeless)) {
+        if ((d.under18hisp_perc) && (d.perc_homeless)) {
           return dotOpacity;
         } else {
           return 0;
@@ -330,7 +330,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
     console.log(circles);
 
     circles.attr("fill", function (d) {
-      if (!(d.perc_homeless) || !(d.under18bk_perc)) {
+      if (!(d.perc_homeless) || !(d.under18hisp_perc)) {
         return "rgba(0, 0, 0, 0)";
       } else {
         if (d.selection == "Top") {
@@ -353,8 +353,8 @@ She is really talented. In case you wanna see what she can do: http://halinamade
     .duration(100)
     .ease("quad")
     .attr("cx", function (d) {
-      if (!isNaN(d.under18bk_perc)) {
-        return xScale(+d.under18bk_perc);
+      if (!isNaN(d.under18hisp_perc)) {
+        return xScale(+d.under18hisp_perc);
       }
     })
     .attr("cy", function (d) {
@@ -376,7 +376,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       }
     })
     .attr("opacity", function (d) {
-      if ((d.perc_homeless) && (d.under18bk_perc)) {
+      if ((d.perc_homeless) && (d.under18hisp_perc)) {
         return dotOpacity;
       } else {
         return 0;
@@ -407,14 +407,14 @@ She is really talented. In case you wanna see what she can do: http://halinamade
   .attr("dx", "-4em")
   .attr("y", width)
   .attr("x", height / 100)
-  .text("Homeless students (%)");
+  .text("Estudiantes sin hogar (%)");
 
   function mouseoverFunc(d) {
     myTooltip2
     .style("display", null) // this removes the display none setting from it
     .html("<p>" + "<span>" + d.county + "</span>" +
-    "<br>Homeless students: " + "<em>" + (d.perc_homeless) + "%</em>" +
-    "<br>African Americans under 18: <em>" + d.under18bk_perc + "%</em>" + "</p>");
+    "<br>Estudiantes sin hogar: " + "<em>" + d.perc_homeless + "%</em>" +
+    "<br>Hispanos menores de 18: <em>" + d.under18hisp_perc + "%</em>" + "</p>");
 
 
     d3.selection.prototype.moveToFront = function() {

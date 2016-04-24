@@ -44,26 +44,30 @@
     stroke: white;
     stroke-width: 1;
     transform: translate(0px, -5px);
+    transition: 200ms ease-in-out;
 }
 
 .slider .handle {
     fill: white;
     stroke-width: 1;
     stroke: #333;
+    transition: 200ms ease-in-out;
 }
 
 .slider .handle,
 .slider text {
     cursor: move;
     cursor: -webkit-grab;
-    transition: fill 10 linear;
+    transition: 200ms ease-in-out;
 }
+
 
 .handle:active,
 .slider text:active {
     cursor: move;
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
+    transition: 200ms ease-in-out;
 }
 
 .slider.brushing .handle {

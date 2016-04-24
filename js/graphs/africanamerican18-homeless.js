@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------
-Scatter: hispanic under 18 & perc_foodstamp
+Scatter: homeless perc & under18bk_perc
 
 This graphic is based on a project by HALINA MADER: http://hmader.github.io/fertility-mortality/index.html
 She is really talented. In case you wanna see what she can do: http://halinamader.com/
@@ -26,11 +26,45 @@ She is really talented. In case you wanna see what she can do: http://halinamade
   var dateFormat = d3.time.format("%Y");
   var year = [];
   var nest = [];
-  var nest2013 = [];
 
-  var dotRadius = d3.scale.sqrt()
-  .domain([0, 22])
-  .range([0, 22]);
+  var dotRadius = 7;
+
+
+  //legend meaning
+  var svgLegend;
+
+  svgLegend = d3.select("#legend8").append("svg")
+        .attr("height",55)
+        .attr("width", 300);
+
+
+  svgLegend.append("circle")
+        .attr("r", 7)
+        .attr("cy", 15)
+        .attr("cx", 10)
+        .attr("fill", "rgb(184,92,87)")
+        .attr("opacity", .7);
+
+  svgLegend.append("text")
+      .attr("y", 20)
+      .attr("x", 22)
+      .attr("class", "redLegend")
+      .text("Counties with highest percentage ");
+  svgLegend.append("text")
+      .attr("y", 40)
+      .attr("x", 22)
+      .attr("class", "redLegend")
+      .text("of homeless students");
+      /*.attr("class", "redLegend")
+      .text("Counties with highest % of homeless students");
+
+
+      var tblock = selection.append("text");
+tblock.append("tspan")
+  .text(line1_text);
+tblock.append("tspan")
+  .text(line2_text);*/
+
 
   var dotOpacity = .7;
   var startYear = 2005,
@@ -45,7 +79,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
   --------------------------------------------------------------------------*/
 
   var xMax = 65;
-  var yMax = 70;
+  var yMax = 25;
 
   var xScale = d3.scale.linear()
   .range([margin.left, width-margin.right]);
@@ -65,14 +99,26 @@ She is really talented. In case you wanna see what she can do: http://halinamade
 
 
   xScale.domain([0, xMax]);
-  yScale.domain([yMax, 0]);
+  yScale.domain([yMax, 0 -1]);
 
-  svg = d3.select("#vis4").append("svg")
+  /*circleLegend = d3.select("#circleLegend8")
+   .append("svg")
+   .attr("width", 50)
+   .attr("height", 50)
+   .append("circle")
+   .attr("cx", 50)
+   .attr("cy", 5)
+   .attr("r", 7)
+   .attr("class", "poronga")
+   .style("fill", "purple");*/
+
+
+  svg = d3.select("#afram18hom").append("svg")
   .attr("viewBox", "0 0 " + width + " " + height )
   .attr("preserveAspectRatio", "xMinYMin slice");
 
   /*dropdown*/
-  var dropDown = d3.select("#filter4").append("select")
+  var dropDown = d3.select("#filter8").append("select")
                   .attr("class", "menu")
                   .attr("name", "county-list");
 
@@ -88,7 +134,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
 
 
   function drawSlider() {
-    d3.select("#slider4").append('div')
+    d3.select("#slider8").append('div')
     .call(slider);
     sliderOkay = true;
   }
@@ -113,6 +159,8 @@ She is really talented. In case you wanna see what she can do: http://halinamade
          return d.county;
        })
        .entries(data);
+
+       console.log("por condados", bycounty);
 
     /*dropdown*/
     var options = dropDown.selectAll("option")
@@ -146,7 +194,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
               }
             })
             .attr("opacity", function (d) {
-              if ((d.perc_foodstamp) && (d.under18hisp_perc)) {
+              if ((d.under18bk_perc) && (d.perc_homeless)) {
                 return dotOpacity;
               } else {
                 return 0;
@@ -171,7 +219,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
 
 
     }
-    var swidth = parseInt(d3.select('#slider4').style('width'),10);
+    var swidth = parseInt(d3.select('#slider8').style('width'),10);
     slider = chroniton()
     .domain([dateFormat.parse("2005"), dateFormat.parse("2013")])
     .labelFormat(d3.time.format('%Y'))
@@ -199,14 +247,10 @@ She is really talented. In case you wanna see what she can do: http://halinamade
     })
     .map(data, d3.map);
 
-    nest2013 = d3.nest()
-    .key(function (d) {
-      return d.county;
-    })
-    .map(data, d3.map);
+    ymean = d3.mean(data, function(d) { return d.perc_homeless; });
 
     console.log("NEST", nest);
-    console.log("nest2013", nest2013);
+    console.log("MEAN", ymean);
 
 
     /*---------------------------------------------------------------------
@@ -226,7 +270,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .attr("dy", "1em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("CHILDREN RECEIVING FOOD STAMPS (%)");
+      .text("African Americans under 18 (%)");
 
       svg.append("g")
       .attr("class", "y axis")
@@ -240,7 +284,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .attr("dy", "0.2em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("Hispanics under 18 (%)");
+      .text("Homeles students (%)");
     }
 
 
@@ -264,20 +308,16 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .attr("class", "dots");
 
       circles.attr("cx", function (d) {
-        if (!isNaN(d.perc_foodstamp)) {
-          return xScale(+d.perc_foodstamp);
+        if (!isNaN(d.under18bk_perc)) {
+          return xScale(+d.under18bk_perc);
         }
       })
       .attr("cy", function (d) {
-        if (!isNaN(d.under18hisp_perc)) {
-          return yScale(+d.under18hisp_perc);
+        if (!isNaN(d.perc_homeless)) {
+          return yScale(+d.perc_homeless);
         }
       })
-      .attr("r", function (d) {
-        if (!isNaN(d.perc_homeless)) {
-          return dotRadius(d.perc_homeless);
-        }
-      }) // you might want to increase your dotRadius
+      .attr("r", dotRadius) // you might want to increase your dotRadius
       .attr("fill", function (d) {
         if (d.selection == "Top") {
           return "rgb(184,92,87)";
@@ -287,7 +327,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
         }
       })
       .attr("opacity", function (d) {
-        if ((d.perc_foodstamp) && (d.under18hisp_perc)) {
+        if ((d.under18bk_perc) && (d.perc_homeless)) {
           return dotOpacity;
         } else {
           return 0;
@@ -330,7 +370,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
     console.log(circles);
 
     circles.attr("fill", function (d) {
-      if (!(d.under18hisp_perc) || !(d.perc_foodstamp)) {
+      if (!(d.perc_homeless) || !(d.under18bk_perc)) {
         return "rgba(0, 0, 0, 0)";
       } else {
         if (d.selection == "Top") {
@@ -345,28 +385,24 @@ She is really talented. In case you wanna see what she can do: http://halinamade
     circles.exit()
     .transition()
     .duration(100)
-    .ease("exp")
+    .ease("linear")
     .attr("r", 0)
     .remove();
     // transition -- move to proper widths and location
     circles.transition()
     .duration(100)
-    .ease("quad")
+    .ease("linear")
     .attr("cx", function (d) {
-      if (!isNaN(d.perc_foodstamp)) {
-        return xScale(+d.perc_foodstamp);
+      if (!isNaN(d.under18bk_perc)) {
+        return xScale(+d.under18bk_perc);
       }
     })
     .attr("cy", function (d) {
-      if (!isNaN(d.under18hisp_perc)) {
-        return yScale(+d.under18hisp_perc);
+      if (!isNaN(d.perc_homeless)) {
+        return yScale(+d.perc_homeless);
       }
     })
-    .attr("r", function (d) {
-      if (!isNaN(d.perc_homeless)) {
-        return dotRadius(d.perc_homeless);
-      }
-    }) // you might want to increase your dotRadius
+    .attr("r", dotRadius)
     .attr("fill", function (d) {
       if (d.selection == "Top") {
         return "rgb(184,92,87)";
@@ -376,46 +412,40 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       }
     })
     .attr("opacity", function (d) {
-      if ((d.under18hisp_perc) && (d.perc_foodstamp)) {
+      if ((d.perc_homeless) && (d.under18bk_perc)) {
         return dotOpacity;
       } else {
         return 0;
       }
     });
 
+
   } // end of draw function
 
-  var legend = svg.append("g")
-  .attr("class", "legend")
-  .attr("transform", "translate(" + (width - margin.right - '18') + "," + (height - 385) + ")")
-  .selectAll("g")
-  .data([5, 15, 25])
-  .enter().append("g");
+  //legend y position
+		var LYP = 5,
+			LXP = 90;
 
-  legend.append("circle")
-  .attr("cy", function(d) { return -dotRadius(d); })
-  .attr("r", dotRadius);
-
-  legend.append("text")
-  .attr("y", function(d) { return -2 * dotRadius(d); })
-  .attr("dy", "1em")
-  .text(d3.format(".1s"));
-
-  legend.append("text")
-  .attr("class", "sphere")
-  .attr("dy", "-46em")
-  .attr("dx", "-4em")
-  .attr("y", width)
-  .attr("x", height / 100)
-  .text("Homeless students (%)");
+		//color legend
+		/*svg.append("circle")
+    .attr("cx", LXP)
+    .attr("cy", LYP + 5)
+    .attr("r", 7)
+    .style("fill", "rgb(53, 135, 212)");
+		svg.append("text")
+    .attr("class", "legendLabel")
+    .attr("x", LXP + 15).attr("y", LYP + 10)
+    .style("text-anchor", "start")
+    .text(function(d) {
+			return "Counties with the highest percentage of homeless students";
+		});*/
 
   function mouseoverFunc(d) {
     myTooltip2
     .style("display", null) // this removes the display none setting from it
     .html("<p>" + "<span>" + d.county + "</span>" +
-    "<br> Homeless students: " + "<em>" + d.perc_homeless + "%</em>" +
-    "<br> Hispanics under 18: " + "<em>" + d.under18hisp_perc + "%</em>" +
-    "<br>Children receiving food stamps: <em>" + d.perc_foodstamp + "%</em>" + "</p>");
+    "<br>Homeless students: " + "<em>" + (d.perc_homeless) + "%</em>" +
+    "<br>African Americans under 18: <em>" + d.under18bk_perc + "%</em>" + "</p>");
 
 
     d3.selection.prototype.moveToFront = function() {

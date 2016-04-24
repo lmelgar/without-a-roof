@@ -1,8 +1,5 @@
 /*--------------------------------------------------------------------------
-Scatter: change median income & perc_foodstamp
-
-This graphic is based on a project by HALINA MADER: http://hmader.github.io/fertility-mortality/index.html
-She is really talented. In case you wanna see what she can do: http://halinamader.com/
+Scatter: median income & unemployment
 --------------------------------------------------------------------------*/
 
 (function() {
@@ -33,8 +30,8 @@ She is really talented. In case you wanna see what she can do: http://halinamade
   .range([0, 22]);
 
   var dotOpacity = .7;
-  var startYear = 2006,
-  filterValue = 2006;
+  var startYear = 2005,
+  filterValue = 2005;
 
   var myTooltip2 = d3.select("body")
    .append("div")
@@ -44,8 +41,8 @@ She is really talented. In case you wanna see what she can do: http://halinamade
   Scale, Axis Variables & Setup
   --------------------------------------------------------------------------*/
 
-  var xMax = 60;
-  var yMax = 25;
+  var xMax = 15;
+  var yMax = 72000;
 
   var xScale = d3.scale.linear()
   .range([margin.left, width-margin.right]);
@@ -65,14 +62,14 @@ She is really talented. In case you wanna see what she can do: http://halinamade
 
 
   xScale.domain([0, xMax]);
-  yScale.domain([yMax, -20]);
+  yScale.domain([yMax, 26000]);
 
-  svg = d3.select("#vis3").append("svg")
+  svg = d3.select("#incunemp").append("svg")
   .attr("viewBox", "0 0 " + width + " " + height )
   .attr("preserveAspectRatio", "xMinYMin slice");
 
   /*dropdown*/
-  var dropDown = d3.select("#filter3").append("select")
+  var dropDown = d3.select("#filter").append("select")
                   .attr("class", "menu")
                   .attr("name", "county-list");
 
@@ -88,7 +85,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
 
 
   function drawSlider() {
-    d3.select("#slider3").append('div')
+    d3.select("#slider").append('div')
     .call(slider);
     sliderOkay = true;
   }
@@ -106,7 +103,6 @@ She is really talented. In case you wanna see what she can do: http://halinamade
   d3.csv("data/dataSet.csv", function(error, data) {
 
     console.log("datos", data);
-
 
     var bycounty = d3.nest()
        .key(function (d) {
@@ -129,6 +125,19 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       displayOthers = this.checked ? "inline" : "none";
       display = this.checked ? "none" : "inline";
 
+    /*d3.selectAll("circles").classed("selected", false);
+    d3.select("circle#" + selected).classed("selected", true);*/
+
+    /*circles.on("click", function () {
+        d3.select(".selected").classed("selected", false);
+        d3.select(this).classed("selected", true);
+
+        })
+
+      d3.selectAll("circle").classed("selected", false);
+							circles.classed("selected", true);*/
+
+
       if(selected == 'All'){
         svg.selectAll(".dots")
             .attr("display", display);
@@ -146,7 +155,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
               }
             })
             .attr("opacity", function (d) {
-              if ((d.perc_foodstamp) && (d.change_median_income)) {
+              if ((d.unemployment) && (d.median_income)) {
                 return dotOpacity;
               } else {
                 return 0;
@@ -171,9 +180,9 @@ She is really talented. In case you wanna see what she can do: http://halinamade
 
 
     }
-    var swidth = parseInt(d3.select('#slider3').style('width'),10);
+    var swidth = parseInt(d3.select('#slider').style('width'),10);
     slider = chroniton()
-    .domain([dateFormat.parse("2006"), dateFormat.parse("2013")])
+    .domain([dateFormat.parse("2005"), dateFormat.parse("2013")])
     .labelFormat(d3.time.format('%Y'))
     .width(swidth)
     .height(52)
@@ -189,7 +198,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
 
     });
 
-    year = ["2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"];
+    year = ["2005", "2007", "2008", "2009", "2010", "2011", "2012", "2013"];
 
     console.log("year", year)
     //Loop once for each row in data
@@ -226,7 +235,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .attr("dy", "1em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("CHILDREN RECEIVING FOOD STAMPS (%)");
+      .text("Unemployment (%)");
 
       svg.append("g")
       .attr("class", "y axis")
@@ -240,7 +249,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .attr("dy", "0.2em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("Change in median income (%)");
+      .text("Median income");
     }
 
 
@@ -264,13 +273,13 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .attr("class", "dots");
 
       circles.attr("cx", function (d) {
-        if (!isNaN(d.perc_foodstamp)) {
-          return xScale(+d.perc_foodstamp);
+        if (!isNaN(d.unemployment)) {
+          return xScale(+d.unemployment);
         }
       })
       .attr("cy", function (d) {
-        if (!isNaN(d.change_median_income)) {
-          return yScale(+d.change_median_income);
+        if (!isNaN(d.median_income)) {
+          return yScale(+d.median_income);
         }
       })
       .attr("r", function (d) {
@@ -287,7 +296,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
         }
       })
       .attr("opacity", function (d) {
-        if ((d.perc_foodstamp) && (d.change_median_income)) {
+        if ((d.unemployment) && (d.median_income)) {
           return dotOpacity;
         } else {
           return 0;
@@ -330,7 +339,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
     console.log(circles);
 
     circles.attr("fill", function (d) {
-      if (!(d.change_median_income) || !(d.perc_foodstamp)) {
+      if (!(d.median_income) || !(d.unemployment)) {
         return "rgba(0, 0, 0, 0)";
       } else {
         if (d.selection == "Top") {
@@ -353,13 +362,13 @@ She is really talented. In case you wanna see what she can do: http://halinamade
     .duration(100)
     .ease("quad")
     .attr("cx", function (d) {
-      if (!isNaN(d.perc_foodstamp)) {
-        return xScale(+d.perc_foodstamp);
+      if (!isNaN(d.unemployment)) {
+        return xScale(+d.unemployment);
       }
     })
     .attr("cy", function (d) {
-      if (!isNaN(d.change_median_income)) {
-        return yScale(+d.change_median_income);
+      if (!isNaN(d.median_income)) {
+        return yScale(+d.median_income);
       }
     })
     .attr("r", function (d) {
@@ -376,7 +385,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       }
     })
     .attr("opacity", function (d) {
-      if ((d.change_median_income) && (d.perc_foodstamp)) {
+      if ((d.median_income) && (d.unemployment)) {
         return dotOpacity;
       } else {
         return 0;
@@ -414,8 +423,8 @@ She is really talented. In case you wanna see what she can do: http://halinamade
     .style("display", null) // this removes the display none setting from it
     .html("<p>" + "<span>" + d.county + "</span>" +
     "<br> Homeless students: " + "<em>" + d.perc_homeless + "%</em>" +
-    "<br> Change in median income: " + "<em>" + d.change_median_income + "%</em>" +
-    "<br>Children receiving food stamps: <em>" + d.perc_foodstamp + "%</em>" + "</p>");
+    "<br>Median income: " + "<em>" + d3.format(",d")(d.median_income) + "</em>" +
+    "<br>Unemployment: <em>" + d.unemployment + "%</em>" + "</p>");
 
 
     d3.selection.prototype.moveToFront = function() {

@@ -6,7 +6,7 @@ This code is based on http://bl.ocks.org/CafeConVega/65d4fb217d2127e30e37093c3a1
 
 (function() {
 
-  var current = "homeless_pop"; // default view
+  var current = "perc_homeless"; // default view
 
   var width = 320,
       height = 300;
@@ -115,7 +115,7 @@ This code is based on http://bl.ocks.org/CafeConVega/65d4fb217d2127e30e37093c3a1
 
    svg.append("g")
       .attr("class", "legendColors")
-          .attr("transform", "translate(15, 125)"); // where we put it on the page!
+      .attr("transform", "translate(15, 125)"); // where we put it on the page!
 
       var legendColors = d3.legend.color()
       .shapeWidth(15)
@@ -200,6 +200,6 @@ This code is based on http://bl.ocks.org/CafeConVega/65d4fb217d2127e30e37093c3a1
       myTooltip2.style("display", "none");  // this sets it to invisible!
     }
 
-  d3.select("button#homeless_pop").classed("selected", true);
+  d3.select("button#perc_homeless").classed("selected", true);
 
 })();

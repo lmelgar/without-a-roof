@@ -1,5 +1,8 @@
 /*--------------------------------------------------------------------------
-Scatter: median income & unemployment
+Scatter: change median income & perc_foodstamp
+
+This graphic is based on a project by HALINA MADER: http://hmader.github.io/fertility-mortality/index.html
+She is really talented. In case you wanna see what she can do: http://halinamader.com/
 --------------------------------------------------------------------------*/
 
 (function() {
@@ -30,8 +33,8 @@ Scatter: median income & unemployment
   .range([0, 22]);
 
   var dotOpacity = .7;
-  var startYear = 2005,
-  filterValue = 2005;
+  var startYear = 2006,
+  filterValue = 2006;
 
   var myTooltip2 = d3.select("body")
    .append("div")
@@ -41,8 +44,8 @@ Scatter: median income & unemployment
   Scale, Axis Variables & Setup
   --------------------------------------------------------------------------*/
 
-  var xMax = 15;
-  var yMax = 72000;
+  var xMax = 60;
+  var yMax = 25;
 
   var xScale = d3.scale.linear()
   .range([margin.left, width-margin.right]);
@@ -62,14 +65,14 @@ Scatter: median income & unemployment
 
 
   xScale.domain([0, xMax]);
-  yScale.domain([yMax, 26000]);
+  yScale.domain([yMax, -20]);
 
-  svg = d3.select("#vis1").append("svg")
+  svg = d3.select("#changestamp").append("svg")
   .attr("viewBox", "0 0 " + width + " " + height )
   .attr("preserveAspectRatio", "xMinYMin slice");
 
   /*dropdown*/
-  var dropDown = d3.select("#filter").append("select")
+  var dropDown = d3.select("#filter3").append("select")
                   .attr("class", "menu")
                   .attr("name", "county-list");
 
@@ -85,7 +88,7 @@ Scatter: median income & unemployment
 
 
   function drawSlider() {
-    d3.select("#slider").append('div')
+    d3.select("#slider3").append('div')
     .call(slider);
     sliderOkay = true;
   }
@@ -103,6 +106,7 @@ Scatter: median income & unemployment
   d3.csv("data/dataSet.csv", function(error, data) {
 
     console.log("datos", data);
+
 
     var bycounty = d3.nest()
        .key(function (d) {
@@ -125,19 +129,6 @@ Scatter: median income & unemployment
       displayOthers = this.checked ? "inline" : "none";
       display = this.checked ? "none" : "inline";
 
-    /*d3.selectAll("circles").classed("selected", false);
-    d3.select("circle#" + selected).classed("selected", true);*/
-
-    /*circles.on("click", function () {
-        d3.select(".selected").classed("selected", false);
-        d3.select(this).classed("selected", true);
-
-        })
-
-      d3.selectAll("circle").classed("selected", false);
-							circles.classed("selected", true);*/
-
-
       if(selected == 'All'){
         svg.selectAll(".dots")
             .attr("display", display);
@@ -155,7 +146,7 @@ Scatter: median income & unemployment
               }
             })
             .attr("opacity", function (d) {
-              if ((d.unemployment) && (d.median_income)) {
+              if ((d.perc_foodstamp) && (d.change_median_income)) {
                 return dotOpacity;
               } else {
                 return 0;
@@ -180,9 +171,9 @@ Scatter: median income & unemployment
 
 
     }
-    var swidth = parseInt(d3.select('#slider').style('width'),10);
+    var swidth = parseInt(d3.select('#slider3').style('width'),10);
     slider = chroniton()
-    .domain([dateFormat.parse("2005"), dateFormat.parse("2013")])
+    .domain([dateFormat.parse("2006"), dateFormat.parse("2013")])
     .labelFormat(d3.time.format('%Y'))
     .width(swidth)
     .height(52)
@@ -198,7 +189,7 @@ Scatter: median income & unemployment
 
     });
 
-    year = ["2005", "2007", "2008", "2009", "2010", "2011", "2012", "2013"];
+    year = ["2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"];
 
     console.log("year", year)
     //Loop once for each row in data
@@ -235,7 +226,7 @@ Scatter: median income & unemployment
       .attr("dy", "1em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("Unemployment (%)");
+      .text("CHILDREN RECEIVING FOOD STAMPS (%)");
 
       svg.append("g")
       .attr("class", "y axis")
@@ -249,7 +240,7 @@ Scatter: median income & unemployment
       .attr("dy", "0.2em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("Median income");
+      .text("Change in median income (%)");
     }
 
 
@@ -273,13 +264,13 @@ Scatter: median income & unemployment
       .attr("class", "dots");
 
       circles.attr("cx", function (d) {
-        if (!isNaN(d.unemployment)) {
-          return xScale(+d.unemployment);
+        if (!isNaN(d.perc_foodstamp)) {
+          return xScale(+d.perc_foodstamp);
         }
       })
       .attr("cy", function (d) {
-        if (!isNaN(d.median_income)) {
-          return yScale(+d.median_income);
+        if (!isNaN(d.change_median_income)) {
+          return yScale(+d.change_median_income);
         }
       })
       .attr("r", function (d) {
@@ -296,7 +287,7 @@ Scatter: median income & unemployment
         }
       })
       .attr("opacity", function (d) {
-        if ((d.unemployment) && (d.median_income)) {
+        if ((d.perc_foodstamp) && (d.change_median_income)) {
           return dotOpacity;
         } else {
           return 0;
@@ -339,7 +330,7 @@ Scatter: median income & unemployment
     console.log(circles);
 
     circles.attr("fill", function (d) {
-      if (!(d.median_income) || !(d.unemployment)) {
+      if (!(d.change_median_income) || !(d.perc_foodstamp)) {
         return "rgba(0, 0, 0, 0)";
       } else {
         if (d.selection == "Top") {
@@ -362,13 +353,13 @@ Scatter: median income & unemployment
     .duration(100)
     .ease("quad")
     .attr("cx", function (d) {
-      if (!isNaN(d.unemployment)) {
-        return xScale(+d.unemployment);
+      if (!isNaN(d.perc_foodstamp)) {
+        return xScale(+d.perc_foodstamp);
       }
     })
     .attr("cy", function (d) {
-      if (!isNaN(d.median_income)) {
-        return yScale(+d.median_income);
+      if (!isNaN(d.change_median_income)) {
+        return yScale(+d.change_median_income);
       }
     })
     .attr("r", function (d) {
@@ -385,7 +376,7 @@ Scatter: median income & unemployment
       }
     })
     .attr("opacity", function (d) {
-      if ((d.median_income) && (d.unemployment)) {
+      if ((d.change_median_income) && (d.perc_foodstamp)) {
         return dotOpacity;
       } else {
         return 0;
@@ -423,8 +414,8 @@ Scatter: median income & unemployment
     .style("display", null) // this removes the display none setting from it
     .html("<p>" + "<span>" + d.county + "</span>" +
     "<br> Homeless students: " + "<em>" + d.perc_homeless + "%</em>" +
-    "<br>Median income: " + "<em>" + d3.format(",d")(d.median_income) + "</em>" +
-    "<br>Unemployment: <em>" + d.unemployment + "%</em>" + "</p>");
+    "<br> Change in median income: " + "<em>" + d.change_median_income + "%</em>" +
+    "<br>Children receiving food stamps: <em>" + d.perc_foodstamp + "%</em>" + "</p>");
 
 
     d3.selection.prototype.moveToFront = function() {

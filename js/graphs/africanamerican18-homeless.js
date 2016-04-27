@@ -43,7 +43,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
         .attr("cy", 15)
         .attr("cx", 10)
         .attr("fill", "rgb(184,92,87)")
-        .attr("opacity", .7);
+        .attr("opacity", .6);
 
   svgLegend.append("text")
       .attr("y", 20)
@@ -55,18 +55,10 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .attr("x", 22)
       .attr("class", "redLegend")
       .text("of homeless students");
-      /*.attr("class", "redLegend")
-      .text("Counties with highest % of homeless students");
 
 
-      var tblock = selection.append("text");
-tblock.append("tspan")
-  .text(line1_text);
-tblock.append("tspan")
-  .text(line2_text);*/
 
-
-  var dotOpacity = .7;
+  var dotOpacity = .6;
   var startYear = 2005,
   filterValue = 2005;
 
@@ -100,17 +92,6 @@ tblock.append("tspan")
 
   xScale.domain([0, xMax]);
   yScale.domain([yMax, 0 -1]);
-
-  /*circleLegend = d3.select("#circleLegend8")
-   .append("svg")
-   .attr("width", 50)
-   .attr("height", 50)
-   .append("circle")
-   .attr("cx", 50)
-   .attr("cy", 5)
-   .attr("r", 7)
-   .attr("class", "poronga")
-   .style("fill", "purple");*/
 
 
   svg = d3.select("#afram18hom").append("svg")
@@ -153,14 +134,24 @@ tblock.append("tspan")
 
     console.log("datos", data);
 
+    var dataflor = [];
+				  data.forEach(function (d) {
+				      if (d.select === "ok") {
+				      dataflor.push(d);
+				        }
+				      });
 
-    var bycounty = d3.nest()
-       .key(function (d) {
-         return d.county;
-       })
-       .entries(data);
+console.log("NO FLORIDA", dataflor);
 
-       console.log("por condados", bycounty);
+
+              var bycounty = d3.nest()
+                 .key(function (d) {
+                   return d.county;
+                 })
+                 .entries(dataflor);
+
+    console.log("BY COUNTIES", bycounty);
+
 
     /*dropdown*/
     var options = dropDown.selectAll("option")
@@ -181,36 +172,15 @@ tblock.append("tspan")
         svg.selectAll(".dots")
             .attr("display", display);
       }
-      else{
-        svg.selectAll(".dots")
-            .filter(function(d) {return selected != d.county;})
-            .attr("display", display)
-            .attr("fill", function (d) {
-              if (d.selection == "Top") {
-                return "rgb(184,92,87)";
-              }
-              else {
-                return "#BFBFBF";
-              }
-            })
-            .attr("opacity", function (d) {
-              if ((d.under18bk_perc) && (d.perc_homeless)) {
-                return dotOpacity;
-              } else {
-                return 0;
-              }
-            });
+      else {
 
+        svg.selectAll(".dots").classed("dotselected", false);
         svg.selectAll(".dots")
             .filter(function(d) {return selected == d.county;})
             .attr("display", display)
-            .attr("opacity", 1)
-            .attr("stroke-width", 1.5)
-            .attr("stroke-opacity", 0.7)
-            .attr("stroke", "black")
-            .attr("opacity", 1)
-            .style("fill", "#D9B26E");
+            .classed("dotselected", true);
       }
+
   });
 
     d3.select(window).on('resize', resize);
@@ -247,10 +217,8 @@ tblock.append("tspan")
     })
     .map(data, d3.map);
 
-    ymean = d3.mean(data, function(d) { return d.perc_homeless; });
 
     console.log("NEST", nest);
-    console.log("MEAN", ymean);
 
 
     /*---------------------------------------------------------------------
@@ -288,7 +256,6 @@ tblock.append("tspan")
     }
 
 
-
     /*--------------------------------------------------------------------------
     drawScatter()
     --------------------------------------------------------------------------*/
@@ -298,6 +265,14 @@ tblock.append("tspan")
       var yearData = nest.get(year);
       console.log(yearData);
 
+      // (d.under18bk_perc) && (d.perc_homeless))
+
+      var xmean = getMean(yearData, "under18bk_perc");
+      var ymean = getMean(yearData, "perc_homeless");
+
+      console.log("MEAN1", xmean);
+      console.log("MEAN2", ymean);
+
       /*---------------------------------------------------------------------
       Circles
       ---------------------------------------------------------------------*/
@@ -305,7 +280,13 @@ tblock.append("tspan")
       .data(yearData)
       .enter()
       .append("circle")
-      .attr("class", "dots");
+      .attr("class", "dots")
+      .attr("id", function(d) {
+        return d.county;
+      });
+
+      /*data = remove_nulls(yearData, "under18bk_perc");
+      data = remove_nulls(yearData, "perc_homeless");*/
 
       circles.attr("cx", function (d) {
         if (!isNaN(d.under18bk_perc)) {
@@ -317,7 +298,7 @@ tblock.append("tspan")
           return yScale(+d.perc_homeless);
         }
       })
-      .attr("r", dotRadius) // you might want to increase your dotRadius
+      .attr("r", dotRadius)
       .attr("fill", function (d) {
         if (d.selection == "Top") {
           return "rgb(184,92,87)";
@@ -340,6 +321,21 @@ tblock.append("tspan")
       .style('cursor','pointer');
 
 
+      var ymeanline = svg.append("line")
+        .attr("class", "meanline")
+        .attr("id", "ymean")
+        .attr("x1", margin.left)
+        .attr("x2", width - margin.right)
+        .attr("y1", yScale(ymean))
+        .attr("y2", yScale(ymean));
+
+      var xmeanline = svg.append("line")
+        .attr("class", "meanline")
+        .attr("id", "xmean")
+        .attr("x1", xScale(xmean))
+        .attr("x2", xScale(xmean))
+        .attr("y1", margin.top)
+        .attr("y2", height - margin.bottom);
 
     }
 
@@ -362,10 +358,19 @@ tblock.append("tspan")
   function redraw(year) {
 
     var year = year;
+
+    var yearData = nest.get(year);
     console.log(nest.get(year));
     var circles = svg.selectAll("circle.dots")
-    .data(nest.get(year));
+    .data(yearData);
+
     console.log(svg);
+
+    var xmean = getMean(yearData, "flor_18afam");
+    var ymean = getMean(yearData, "flor_perc_hom");
+
+    console.log("MEANVA1", xmean);
+    console.log("MEANVA2", ymean);
 
     console.log(circles);
 
@@ -419,26 +424,18 @@ tblock.append("tspan")
       }
     });
 
+    d3.select("line#xmean").transition()
+        .attr("x1", xScale(xmean))
+        .attr("x2", xScale(xmean));
+
+    d3.select("line#ymean").transition()
+      .attr("y1", yScale(ymean))
+      .attr("y2", yScale(ymean));
+
 
   } // end of draw function
 
-  //legend y position
-		var LYP = 5,
-			LXP = 90;
 
-		//color legend
-		/*svg.append("circle")
-    .attr("cx", LXP)
-    .attr("cy", LYP + 5)
-    .attr("r", 7)
-    .style("fill", "rgb(53, 135, 212)");
-		svg.append("text")
-    .attr("class", "legendLabel")
-    .attr("x", LXP + 15).attr("y", LYP + 10)
-    .style("text-anchor", "start")
-    .text(function(d) {
-			return "Counties with the highest percentage of homeless students";
-		});*/
 
   function mouseoverFunc(d) {
     myTooltip2
@@ -455,7 +452,6 @@ tblock.append("tspan")
 };
   }
   function mousemoveFunc(d) {
-    //console.log("events", window.event, d3.event);
     myTooltip2
     .style("top", (d3.event.pageY - 10) + "px" )
     .style("left", (d3.event.pageX + 15) + "px");
@@ -463,5 +459,19 @@ tblock.append("tspan")
   function mouseoutFunc(d) {
     return myTooltip2.style("display", "none");  // this sets it to invisible!
   }
+
+  function getMean(data, column) {
+      return d3.sum(data, function(d) { return +d[column]});
+  }
+
+  /*function remove_nulls(yearData, input) {
+  // we are assuming empty strings and 0's are not graphable
+    return yearData.filter(function(d) {
+      if (d[input] !== "undefined" && d[input] !== "" && d[input] !== "0" && +d[input] !==0 ) {
+          return d;
+        }
+    });
+}*/
+
 
 })();

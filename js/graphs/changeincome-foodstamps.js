@@ -1,15 +1,7 @@
-/*--------------------------------------------------------------------------
-Scatter: change median income & perc_foodstamp
 
-This graphic is based on a project by HALINA MADER: http://hmader.github.io/fertility-mortality/index.html
-She is really talented. In case you wanna see what she can do: http://halinamader.com/
---------------------------------------------------------------------------*/
 
 (function() {
 
-  /*--------------------------------------------------------------------------
-  Setup vars
-  --------------------------------------------------------------------------*/
 
   var margin = {
     top: 10,
@@ -20,418 +12,260 @@ She is really talented. In case you wanna see what she can do: http://halinamade
   width = 500 - margin.right - margin.left,
   height = 500 - margin.top - margin.bottom;
 
+      //Set up date formatting and years
+      var dateFormat = d3.time.format("%Y");
+      var outFormat = d3.time.format("%Y");
+      var bycountry = [];
 
-  var data;
-  var svg;
-  var dateFormat = d3.time.format("%Y");
-  var year = [];
-  var nest = [];
-  var nest2013 = [];
+      //Set up scales
+      var xScale = d3.time.scale()
+                .range([ margin.left, width - margin.right ]);
+      var yScale = d3.scale.linear()
+                .range([ margin.top, height - margin.bottom ]);
 
-  var dotRadius = d3.scale.sqrt()
-  .domain([0, 22])
-  .range([0, 22]);
+      //Configure axis generators
+      var xAxis = d3.svg.axis()
+      .scale(xScale)
+      .orient("bottom")
+      .ticks(5);
 
-  var dotOpacity = .7;
-  var startYear = 2006,
-  filterValue = 2006;
+      var yAxis = d3.svg.axis()
+      .scale(yScale)
+      .ticks(5)
+      .tickFormat(d3.format("s"))
+      .orient("left");
 
-  var myTooltip2 = d3.select("body")
-   .append("div")
-   .attr("class", "myTooltip2");
-
-  /*--------------------------------------------------------------------------
-  Scale, Axis Variables & Setup
-  --------------------------------------------------------------------------*/
-
-  var xMax = 60;
-  var yMax = 25;
-
-  var xScale = d3.scale.linear()
-  .range([margin.left, width-margin.right]);
-  var yScale = d3.scale.linear()
-  .range([margin.top, height - margin.bottom]);
-
-  var xAxis = d3.svg.axis()
-  .scale(xScale)
-  .orient("bottom")
-  .ticks(5);
-
-  var yAxis = d3.svg.axis()
-  .scale(yScale)
-  .ticks(5)
-  .tickFormat(d3.format("s"))
-  .orient("left");
-
-
-  xScale.domain([0, xMax]);
-  yScale.domain([yMax, -20]);
-
-  svg = d3.select("#changestamp").append("svg")
-  .attr("viewBox", "0 0 " + width + " " + height )
-  .attr("preserveAspectRatio", "xMinYMin slice");
-
-  /*dropdown*/
-  var dropDown = d3.select("#filter3").append("select")
-                  .attr("class", "menu")
-                  .attr("name", "county-list");
-
-
-
-  var sliderOkay = false;
-
-
-  /*--------------------------------------------------------------------------
-  Slider
-  --------------------------------------------------------------------------*/
-  // see examples in http://www.macwright.org/chroniton/example/
-
-
-  function drawSlider() {
-    d3.select("#slider3").append('div')
-    .call(slider);
-    sliderOkay = true;
-  }
-
-  function end() {
-    console.log(slider.isAtEnd());
-    if (slider.isAtEnd()) {
-      slider.pause();
-    }
-  }
-
-  var slider;
-
-
-  d3.csv("data/dataSet.csv", function(error, data) {
-
-    console.log("datos", data);
-
-
-    var bycounty = d3.nest()
-       .key(function (d) {
-         return d.county;
-       })
-       .entries(data);
-
-    /*dropdown*/
-    var options = dropDown.selectAll("option")
-             .data([{key:"All"}].concat(bycounty))
-             .enter()
-             .append("option");
-
-
-    options.text(function (d) { return d.key; })
-    .attr("value", function (d) { return d.key; });
-
-    dropDown.on("change", function() {
-      var selected = this.value;
-      displayOthers = this.checked ? "inline" : "none";
-      display = this.checked ? "none" : "inline";
-
-      if(selected == 'All'){
-        svg.selectAll(".dots")
-            .attr("display", display);
-      }
-      else{
-        svg.selectAll(".dots")
-            .filter(function(d) {return selected != d.county;})
-            .attr("display", display)
-            .attr("fill", function (d) {
-              if (d.selection == "Top") {
-                return "rgb(184,92,87)";
-              }
-              else {
-                return "#BFBFBF";
-              }
-            })
-            .attr("opacity", function (d) {
-              if ((d.perc_foodstamp) && (d.change_median_income)) {
-                return dotOpacity;
-              } else {
-                return 0;
-              }
-            });
-
-        svg.selectAll(".dots")
-            .filter(function(d) {return selected == d.county;})
-            .attr("display", display)
-            .attr("opacity", 1)
-            .attr("stroke-width", 1.5)
-            .attr("stroke-opacity", 0.7)
-            .attr("stroke", "black")
-            .attr("opacity", 1)
-            .style("fill", "#D9B26E");
-      }
-  });
-
-    d3.select(window).on('resize', resize);
-
-    function resize() {
-
-
-    }
-    var swidth = parseInt(d3.select('#slider3').style('width'),10);
-    slider = chroniton()
-    .domain([dateFormat.parse("2006"), dateFormat.parse("2013")])
-    .labelFormat(d3.time.format('%Y'))
-    .width(swidth)
-    .height(52)
-    .playButton(true)
-    .playbackRate(.5) // can also be set to loop
-    .on("change", function (d) {
-      filterValue = dateFormat(d3.time.year(d));
-      console.log("filterValue", filterValue);
-      if (filterValue <= 2013) {
-        redraw(filterValue);
-        end();
-      }
-
-    });
-
-    year = ["2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"];
-
-    console.log("year", year)
-    //Loop once for each row in data
-    nest = d3.nest()
-    .key(function (d) {
-      return d.year;
-    })
-    .map(data, d3.map);
-
-    nest2013 = d3.nest()
-    .key(function (d) {
-      return d.county;
-    })
-    .map(data, d3.map);
-
-    console.log("NEST", nest);
-    console.log("nest2013", nest2013);
-
-
-    /*---------------------------------------------------------------------
-    drawAxes()
-    ---------------------------------------------------------------------*/
-    function drawAxes() {
-      yAxis.scale(yScale);
-      xAxis.scale(xScale);
-
-      svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-      .call(xAxis)
-      .append("text")
-      .attr("x", width-margin.right)
-      .attr("y", 30)
-      .attr("dy", "1em")
-      .style("text-anchor", "end")
-      .attr("class", "label_sca")
-      .text("CHILDREN RECEIVING FOOD STAMPS (%)");
-
-      svg.append("g")
-      .attr("class", "y axis")
-      .attr("transform", "translate(" + (margin.left) + ",0)")
-      .call(yAxis)
-      .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("x", -margin.top)
-      .attr("dx", "0.1em")
-      .attr("y", -45)
-      .attr("dy", "0.2em")
-      .style("text-anchor", "end")
-      .attr("class", "label_sca")
-      .text("Change in median income (%)");
-    }
-
-
-
-    /*--------------------------------------------------------------------------
-    drawScatter()
-    --------------------------------------------------------------------------*/
-    function drawScatter(year) {
-      year = year;
-      console.log(year);
-      var yearData = nest.get(year);
-      console.log(yearData);
-
-      /*---------------------------------------------------------------------
-      Circles
-      ---------------------------------------------------------------------*/
-      var circles = svg.selectAll("circle")
-      .data(yearData)
-      .enter()
-      .append("circle")
-      .attr("class", "dots");
-
-      circles.attr("cx", function (d) {
-        if (!isNaN(d.perc_foodstamp)) {
-          return xScale(+d.perc_foodstamp);
-        }
-      })
-      .attr("cy", function (d) {
-        if (!isNaN(d.change_median_income)) {
+      //Configure line generator
+      // each line dataset must have a d.year and a d.amount for this to work.
+      var line = d3.svg.line()
+        .x(function(d) {
+          return xScale(dateFormat.parse(d.year));
+        })
+        .y(function(d) {
           return yScale(+d.change_median_income);
-        }
-      })
-      .attr("r", function (d) {
-        if (!isNaN(d.perc_homeless)) {
-          return dotRadius(d.perc_homeless);
-        }
-      }) // you might want to increase your dotRadius
-      .attr("fill", function (d) {
-        if (d.selection == "Top") {
-          return "rgb(184,92,87)";
-        }
-        else {
-          return "#BFBFBF";
-        }
-      })
-      .attr("opacity", function (d) {
-        if ((d.perc_foodstamp) && (d.change_median_income)) {
-          return dotOpacity;
-        } else {
-          return 0;
-        }
-      });
+        });
 
-      circles.on("mouseover", mouseoverFunc)
-      .on("mouseout", mouseoutFunc)
-      .on("mousemove", mousemoveFunc)
-      .style('cursor','pointer');
+      var myTooltip2 = d3.select("body")
+              .append("div")
+              .attr("class","myTooltip2");
+
+      //Create the empty SVG image
+      svg = d3.select("#changestamp").append("svg")
+        .attr("viewBox", "0 0 " + width + " " + height )
+        .attr("preserveAspectRatio", "xMinYMin slice");
+
+        /*dropdown*/
+        var dropDown = d3.select("#filter3").append("select")
+                        .attr("class", "menu")
+                        .attr("name", "county-list");
+
+      //Load data
+      d3.csv("data/dataSet.csv", function(error, data) {
+        var years = ["2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"];
+
+          //Loop once for each row in data
+
+        var byyear = [];
+          data.forEach(function (d) {
+            if (d.year != "2005") {
+              byyear.push(d);
+            }
+          });
+
+          var dataflor = [];
+                data.forEach(function (d) {
+                    if (d.select === "ok") {
+                    dataflor.push(d);
+                      }
+                    });
+
+      console.log("NO FLORIDA", dataflor);
+
+
+                    var selectcounty = d3.nest()
+                       .key(function (d) {
+                         return d.county;
+                       })
+                       .entries(dataflor);
+
+          console.log("SELECT COUNTIES", selectcounty);
+
+
+          /*dropdown*/
+          var options = dropDown.selectAll("option")
+                   .data([{key:"All"}].concat(selectcounty))
+                   .enter()
+                   .append("option");
+
+
+          options.text(function (d) { return d.key; })
+          .attr("value", function (d) { return d.key; });
+
+          dropDown.on("change", function() {
+            var selected = this.value;
+            displayOthers = this.checked ? "inline" : "none";
+            display = this.checked ? "none" : "inline";
+
+            if(selected == 'All'){
+              svg.selectAll("g.path")
+                  .attr("display", display);
+            }
+            else if (selected != "All") {
+              svg.selectAll("g.path")
+                  .filter(function(d) {return selected == d.county;})
+                  .attr("display", display)
+                  .attr("opacity", 1)
+                  .attr("stroke-width", 1.5)
+                  .attr("stroke-opacity", 0.7)
+                  .attr("stroke", "black");
+            }
+            else {
+              svg.selectAll(".lines_chart")
+                  .remove();
+
+            }
+        });
+
+        console.log("POR ANOS", byyear);
+
+        var bycounty = d3.nest().key(function (d) {
+                      return d.county;
+                                      })
+                      .entries(byyear);
+
+        console.log("DATA", data);
+        console.log("COUNTY INFO", bycounty);
+
+        //Set scale domains - max and mine of the years
+        xScale.domain(
+          d3.extent(years, function(d) {
+            return dateFormat.parse(d);
+          })
+        );
+        // max of emissions to 0 (reversed, remember)
+        yScale.domain([
+          d3.max(bycounty, function(d) {
+            return d3.max(d.values, function(d) {
+              return +d.change_median_income;
+            });
+          }),
+          -20
+        ]);
+
+        //Make a group for each country
+        var groups = svg.selectAll("g")
+					.data(bycounty)
+					.enter()
+					.append("g")
+					.attr("class", "lines_chart");
+
+
+        //Within each group, create a new line/path,
+        //binding just the emissions data to each one
+        groups.selectAll("path")
+          .data(function(d) { // because there's a group with data already...
+            return [ d.values ]; // it has to be an array for the line function
+          })
+          .enter()
+          .append("path")
+          .attr("class", "line")
+          .classed("floriline", function (d, i) {
+        	console.log(d[i].county);
+        	if (d[i].county === "Florida") {
+        		console.log("true");
+        		return true;
+        	} else {
+        		console.log("false");
+        		return false;
+        	}
+        })
+          .attr("d", line);
 
 
 
-    }
+        var circles = groups.selectAll("circle")
+                    .data(function(d) { // because there's a group with data already...
+                          return d.values; // NOT an array here.
+                    })
+                    .enter()
+                    .append("circle");
+            circles.attr("cx", function(d) {
+                return xScale(dateFormat.parse(d.year));
+              })
+              .attr("cy", function(d) {
+                return yScale(+d.change_median_income);
+              })
+              .attr("r", 1.5)
+              .attr("fill", "rgba(136,136,136,1)")
+              .style("opacity", 0.3); // this is optional - if you want visible dots or not!
+
+        //Axes
+        svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(xAxis)
+        .append("text")
+        .attr("x", width-margin.right)
+        .attr("y", 30)
+        .attr("dy", "1em")
+        .style("text-anchor", "end")
+        .attr("class", "label_sca")
+        .text("Year (from 2006 to 2013)");
+
+        svg.append("g")
+        .attr("class", "y axis")
+        .attr("id", "axisblank")
+        .attr("transform", "translate(" + (margin.left) + ",0)")
+        .call(yAxis)
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -margin.top)
+        .attr("dx", "-1em")
+        .attr("y", -45)
+        .attr("dy", "0.2em")
+        .style("text-anchor", "end")
+        .attr("class", "label_sca")
+        .text("Change in median income from previous year (%)");
 
 
-    /*--------------------------------------------------------------------------
-    Call the functions
-    --------------------------------------------------------------------------*/
+        circles
+              .on("mouseover", mouseoverFunc)
+              .on("mousemove", mousemoveFunc)
+              .on("mouseout",	mouseoutFunc)
+              .style('cursor','pointer');
 
-    drawAxes();
-    drawScatter(startYear);
-    /*setColorDomain();*/
-    drawSlider();
+
+        function mouseoverFunc(d) {
+                d3.select(this)
+                  .transition()
+                  .style("opacity", 1)
+                  .attr("r", 4);
+                myTooltip2
+                  .style("display", null) // this removes the display none setting from it
+                  .html("<p> <span>" + d.county + "</span>" +
+                        "<br>Year: " + d.year +
+                        "<br>Median income change: <em>" + d3.format(",")(d.change_median_income) + "%</em></p>");
+                d3.selectAll("path.line").classed("unfocused", true);
+                        // now undo the unfocus on the current line and set to focused.
+                d3.selectAll(this).select("path.line").classed("unfocused", false).classed("focused", true);
+                }
+        function mousemoveFunc(d) {
+                myTooltip2
+                  .style("top", (d3.event.pageY - 10) + "px" )
+                  .style("left", (d3.event.pageX + 10) + "px");
+                }
+        function mouseoutFunc(d) {
+                d3.select(this)
+                  .transition()
+                  .style("opacity", .3)
+                  .attr("r", 1.5);
+                myTooltip2.style("display", "none");  // this sets it to invisible!
+                d3.selectAll("path.line").classed("unfocused", false).classed("focused", false);
+              }
+
+
 
   });
 
-  /*--------------------------------------------------------------------------
-  redraw()
-  --------------------------------------------------------------------------*/
-
-  function redraw(year) {
-
-    var year = year;
-    console.log(nest.get(year));
-    var circles = svg.selectAll("circle.dots")
-    .data(nest.get(year));
-    console.log(svg);
-
-    console.log(circles);
-
-    circles.attr("fill", function (d) {
-      if (!(d.change_median_income) || !(d.perc_foodstamp)) {
-        return "rgba(0, 0, 0, 0)";
-      } else {
-        if (d.selection == "Top") {
-          return "rgb(184,92,87)";
-        }
-        else {
-          return "#BFBFBF";
-        }
-      }
-    });
-
-    circles.exit()
-    .transition()
-    .duration(100)
-    .ease("exp")
-    .attr("r", 0)
-    .remove();
-    // transition -- move to proper widths and location
-    circles.transition()
-    .duration(100)
-    .ease("quad")
-    .attr("cx", function (d) {
-      if (!isNaN(d.perc_foodstamp)) {
-        return xScale(+d.perc_foodstamp);
-      }
-    })
-    .attr("cy", function (d) {
-      if (!isNaN(d.change_median_income)) {
-        return yScale(+d.change_median_income);
-      }
-    })
-    .attr("r", function (d) {
-      if (!isNaN(d.perc_homeless)) {
-        return dotRadius(d.perc_homeless);
-      }
-    }) // you might want to increase your dotRadius
-    .attr("fill", function (d) {
-      if (d.selection == "Top") {
-        return "rgb(184,92,87)";
-      }
-      else {
-        return "#BFBFBF";
-      }
-    })
-    .attr("opacity", function (d) {
-      if ((d.change_median_income) && (d.perc_foodstamp)) {
-        return dotOpacity;
-      } else {
-        return 0;
-      }
-    });
-
-  } // end of draw function
-
-  var legend = svg.append("g")
-  .attr("class", "legend")
-  .attr("transform", "translate(" + (width - margin.right - '18') + "," + (height - 385) + ")")
-  .selectAll("g")
-  .data([5, 15, 25])
-  .enter().append("g");
-
-  legend.append("circle")
-  .attr("cy", function(d) { return -dotRadius(d); })
-  .attr("r", dotRadius);
-
-  legend.append("text")
-  .attr("y", function(d) { return -2 * dotRadius(d); })
-  .attr("dy", "1em")
-  .text(d3.format(".1s"));
-
-  legend.append("text")
-  .attr("class", "sphere")
-  .attr("dy", "-46em")
-  .attr("dx", "-4em")
-  .attr("y", width)
-  .attr("x", height / 100)
-  .text("Homeless students (%)");
-
-  function mouseoverFunc(d) {
-    myTooltip2
-    .style("display", null) // this removes the display none setting from it
-    .html("<p>" + "<span>" + d.county + "</span>" +
-    "<br> Homeless students: " + "<em>" + d.perc_homeless + "%</em>" +
-    "<br> Change in median income: " + "<em>" + d.change_median_income + "%</em>" +
-    "<br>Children receiving food stamps: <em>" + d.perc_foodstamp + "%</em>" + "</p>");
-
-
-    d3.selection.prototype.moveToFront = function() {
-  return this.each(function() {
-  this.parentNode.appendChild(this);
-  });
-};
-  }
-  function mousemoveFunc(d) {
-    //console.log("events", window.event, d3.event);
-    myTooltip2
-    .style("top", (d3.event.pageY - 10) + "px" )
-    .style("left", (d3.event.pageX + 15) + "px");
-  }
-  function mouseoutFunc(d) {
-    return myTooltip2.style("display", "none");  // this sets it to invisible!
-  }
 
 })();

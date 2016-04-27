@@ -4,10 +4,10 @@
 
 
   var margin = {
-    top: 10,
+    top: 30,
     right: 10,
     bottom: 50,
-    left: 60
+    left: 35
   },
   width = 500 - margin.right - margin.left,
   height = 500 - margin.top - margin.bottom;
@@ -31,7 +31,7 @@
 
       var yAxis = d3.svg.axis()
       .scale(yScale)
-      .ticks(5)
+      .ticks(4)
       .tickFormat(d3.format("s"))
       .orient("left");
 
@@ -42,7 +42,7 @@
           return xScale(dateFormat.parse(d.year));
         })
         .y(function(d) {
-          return yScale(+d.change_median_income);
+          return yScale(+d.change_income);
         });
 
       var myTooltip2 = d3.select("body")
@@ -50,17 +50,13 @@
               .attr("class","myTooltip2");
 
       //Create the empty SVG image
-      svg = d3.select("#changestamp").append("svg")
+      svg = d3.select("#incstamp").append("svg")
         .attr("viewBox", "0 0 " + width + " " + height )
         .attr("preserveAspectRatio", "xMinYMin slice");
 
-        /*dropdown*/
-        var dropDown = d3.select("#filter3").append("select")
-                        .attr("class", "menu")
-                        .attr("name", "county-list");
 
       //Load data
-      d3.csv("data/dataSet.csv", function(error, data) {
+      d3.csv("data/incomeStamps.csv", function(error, data) {
         var years = ["2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"];
 
           //Loop once for each row in data
@@ -72,59 +68,6 @@
             }
           });
 
-          var dataflor = [];
-                data.forEach(function (d) {
-                    if (d.select === "ok") {
-                    dataflor.push(d);
-                      }
-                    });
-
-      console.log("NO FLORIDA", dataflor);
-
-
-                    var selectcounty = d3.nest()
-                       .key(function (d) {
-                         return d.county;
-                       })
-                       .entries(dataflor);
-
-          console.log("SELECT COUNTIES", selectcounty);
-
-
-          /*dropdown*/
-          var options = dropDown.selectAll("option")
-                   .data([{key:"All"}].concat(selectcounty))
-                   .enter()
-                   .append("option");
-
-
-          options.text(function (d) { return d.key; })
-          .attr("value", function (d) { return d.key; });
-
-          dropDown.on("change", function() {
-            var selected = this.value;
-            displayOthers = this.checked ? "inline" : "none";
-            display = this.checked ? "none" : "inline";
-
-            if(selected == 'All'){
-              svg.selectAll("g.path")
-                  .attr("display", display);
-            }
-            else if (selected != "All") {
-              svg.selectAll("g.path")
-                  .filter(function(d) {return selected == d.county;})
-                  .attr("display", display)
-                  .attr("opacity", 1)
-                  .attr("stroke-width", 1.5)
-                  .attr("stroke-opacity", 0.7)
-                  .attr("stroke", "black");
-            }
-            else {
-              svg.selectAll(".lines_chart")
-                  .remove();
-
-            }
-        });
 
         console.log("POR ANOS", byyear);
 
@@ -146,10 +89,10 @@
         yScale.domain([
           d3.max(bycounty, function(d) {
             return d3.max(d.values, function(d) {
-              return +d.change_median_income;
+              return +d.change_income;
             });
           }),
-          -20
+          -10
         ]);
 
         //Make a group for each country
@@ -171,7 +114,7 @@
           .attr("class", "line")
           .classed("floriline", function (d, i) {
         	console.log(d[i].county);
-        	if (d[i].county === "Florida") {
+        	if (d[i].county === "Florida1") {
         		console.log("true");
         		return true;
         	} else {
@@ -193,15 +136,16 @@
                 return xScale(dateFormat.parse(d.year));
               })
               .attr("cy", function(d) {
-                return yScale(+d.change_median_income);
+                return yScale(+d.change_income);
               })
               .attr("r", 1.5)
               .attr("fill", "rgba(136,136,136,1)")
-              .style("opacity", 0.3); // this is optional - if you want visible dots or not!
+              .style("opacity", 0); // this is optional - if you want visible dots or not!
 
         //Axes
         svg.append("g")
         .attr("class", "x axis")
+        .attr("id", "text_line")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
         .call(xAxis)
         .append("text")
@@ -209,23 +153,32 @@
         .attr("y", 30)
         .attr("dy", "1em")
         .style("text-anchor", "end")
-        .attr("class", "label_sca")
+        .attr("id", "label_line")
         .text("Year (from 2006 to 2013)");
 
-        svg.append("g")
+      svg.append("g")
         .attr("class", "y axis")
         .attr("id", "axisblank")
         .attr("transform", "translate(" + (margin.left) + ",0)")
-        .call(yAxis)
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("x", -margin.top)
-        .attr("dx", "-1em")
-        .attr("y", -45)
-        .attr("dy", "0.2em")
-        .style("text-anchor", "end")
-        .attr("class", "label_sca")
-        .text("Change in median income from previous year (%)");
+        .call(yAxis);
+
+        svg.append("text")
+            .attr("transform", "translate(" + (margin.right + margin.left + 130) + ",0)")
+            .attr("dy", "1em")
+            .attr("dx", "3em")
+  					.attr("text-anchor", "start")
+            .attr("id", "country_label")
+  					.text("Children receiving food stamps (%)");
+
+
+
+        svg.append("text")
+            .attr("transform", "translate(" + (margin.right + margin.left + 125) + ",0)")
+            .attr("dy", "18.9em")
+            .attr("dx", "3em")
+            .attr("text-anchor", "start")
+            .attr("id", "country_label2")
+            .text("Yearly change in median income (%)");
 
 
         circles
@@ -242,9 +195,8 @@
                   .attr("r", 4);
                 myTooltip2
                   .style("display", null) // this removes the display none setting from it
-                  .html("<p> <span>" + d.county + "</span>" +
-                        "<br>Year: " + d.year +
-                        "<br>Median income change: <em>" + d3.format(",")(d.change_median_income) + "%</em></p>");
+                  .html("<p>Year: " + d.year +
+                        "<br>Value: <em>" + d3.format(",")(d.change_income) + "%</em></p>");
                 d3.selectAll("path.line").classed("unfocused", true);
                         // now undo the unfocus on the current line and set to focused.
                 d3.selectAll(this).select("path.line").classed("unfocused", false).classed("focused", true);

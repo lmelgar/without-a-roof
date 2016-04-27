@@ -36,10 +36,6 @@ svg {
 }
 
 
-/*svg circle:hover {
-opacity: .3;
-}*/
-
 svg g {
   fill: #ACACAC;
 }
@@ -52,6 +48,7 @@ svg g text.ylabel {
   font-weight: 300;
   text-transform: uppercase;
 }
+
 
 .axis path,
 .axis line {
@@ -78,8 +75,7 @@ line.meanline {
   fill: rgba(136,136,136,1);
 }
 
-
-  .chroniton text {
+.chroniton text {
   font-family: "Open Sans", sans-serif;
   font-weight: 300;
   font-size: 12px;
@@ -147,6 +143,10 @@ opacity: 0.5;
   fill: black;
 }
 
+#Florida {
+  display: none;
+}
+
 /*map*/
 
 .county {
@@ -187,13 +187,13 @@ text.redLegend {
 .line {
 
 fill: none;
-stroke: rgba(136,136,136,0.4);
-stroke-width: 0.4px;
+stroke: rgba(136,136,136,0.6);
+stroke-width: 2px;
 
 }
 
 .unfocused {
-  stroke-opacity: 0.6;
+  stroke-opacity: 1;
 }
 .focused {
   stroke-width: 1.7px;
@@ -202,14 +202,53 @@ stroke-width: 0.4px;
 
 svg g path.floriline {
   fill: none;
-  stroke: rgba(184,92,87,0.7);
-  stroke-width: 1.5px;
+  stroke: rgba(184,92,87,0.6);
+  stroke-width: 2px;
 }
 
 #axisblank path {
   display: none;
 }
 
+#axisblank text {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  fill: rgba(136,136,136,1);
+}
+
+#text_line text {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  fill: rgba(136,136,136,1);
+}
+
+svg g text#label_line {
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  fill: black;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+
+#country_label {
+  font-family: "Open Sans", sans-serif;
+  fill: rgba(136,136,136,1);
+  font-weight: 300;
+  font-size: 14px;
+
+}
+
+
+#country_label2 {
+  font-family: "Open Sans", sans-serif;
+  fill: rgba(184,92,87,1);
+  font-weight: 300;
+  font-size: 14px;
+
+}
 
 @media (max-width : 400px) {
 
@@ -234,6 +273,47 @@ svg g path.floriline {
     font-weight: 300;
     font-size: 15px;
     fill: rgba(136,136,136,1);
+  }
+
+  /*linechart*/
+
+  #axisblank text {
+    font-family: "Open Sans", sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    fill: rgba(136,136,136,1);
+  }
+
+  #text_line text {
+    font-family: "Open Sans", sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    fill: rgba(136,136,136,1);
+  }
+
+
+  #country_label {
+    font-family: "Open Sans", sans-serif;
+    fill: rgba(136,136,136,1);
+    font-weight: 600;
+    font-size: 14px;
+
+  }
+
+  #country_label2 {
+    font-family: "Open Sans", sans-serif;
+    fill: rgba(184,92,87,1);
+    font-weight: 600;
+    font-size: 14px;
+
+  }
+
+  svg g text#label_line {
+    font-family: "Open Sans", sans-serif;
+    font-size: 16px;
+    fill: black;
+    font-weight: 300;
+    text-transform: uppercase;
   }
 
   .chroniton text {

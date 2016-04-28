@@ -37,7 +37,6 @@ She is really talented. In case you wanna see what she can do: http://halinamade
         .attr("height",55)
         .attr("width", 300);
 
-
   svgLegend.append("circle")
         .attr("r", 7)
         .attr("cy", 15)
@@ -49,12 +48,32 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .attr("y", 20)
       .attr("x", 22)
       .attr("class", "redLegend")
-      .text("Counties with highest percentage ");
+      .text("Counties with highest percentage");
   svgLegend.append("text")
       .attr("y", 40)
       .attr("x", 22)
       .attr("class", "redLegend")
       .text("of homeless students");
+
+var svgAvg;
+
+svgAvg = d3.select("#avg8").append("svg")
+        .attr("height", 30)
+        .attr("width", 300);
+
+svgAvg.append("line")
+      .attr("class", "svgAvg")
+      .attr("x1", 0)
+      .attr("x2", 16)
+      .attr("y1", 16)
+      .attr("y2", 16);
+
+
+svgAvg.append("text")
+          .attr("y",20)
+          .attr("x", 22)
+          .attr("class", "redLegend")
+          .text("Average");
 
 
 
@@ -81,12 +100,13 @@ She is really talented. In case you wanna see what she can do: http://halinamade
   var xAxis = d3.svg.axis()
   .scale(xScale)
   .orient("bottom")
-  .ticks(5);
+  .ticks(5)
+  .tickFormat(function(d) { return parseInt(d, 10) + "%"; });
 
   var yAxis = d3.svg.axis()
   .scale(yScale)
   .ticks(5)
-  .tickFormat(d3.format("s"))
+  .tickFormat(function(d) { return parseInt(d, 10) + "%"; })
   .orient("left");
 
 
@@ -238,7 +258,7 @@ console.log("NO FLORIDA", dataflor);
       .attr("dy", "1em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("African Americans under 18 (%)");
+      .text("African Americans under 18");
 
       svg.append("g")
       .attr("class", "y axis")
@@ -252,7 +272,7 @@ console.log("NO FLORIDA", dataflor);
       .attr("dy", "0.2em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("Homeles students (%)");
+      .text("Homeless students");
     }
 
 
@@ -265,10 +285,8 @@ console.log("NO FLORIDA", dataflor);
       var yearData = nest.get(year);
       console.log(yearData);
 
-      // (d.under18bk_perc) && (d.perc_homeless))
-
-      var xmean = getMean(yearData, "under18bk_perc");
-      var ymean = getMean(yearData, "perc_homeless");
+      var xmean = getMean(yearData, "flor_18afam");
+      var ymean = getMean(yearData, "flor_perc_hom");
 
       console.log("MEAN1", xmean);
       console.log("MEAN2", ymean);
@@ -285,8 +303,6 @@ console.log("NO FLORIDA", dataflor);
         return d.county;
       });
 
-      /*data = remove_nulls(yearData, "under18bk_perc");
-      data = remove_nulls(yearData, "perc_homeless");*/
 
       circles.attr("cx", function (d) {
         if (!isNaN(d.under18bk_perc)) {
@@ -346,7 +362,6 @@ console.log("NO FLORIDA", dataflor);
 
     drawAxes();
     drawScatter(startYear);
-    /*setColorDomain();*/
     drawSlider();
 
   });
@@ -390,13 +405,13 @@ console.log("NO FLORIDA", dataflor);
     circles.exit()
     .transition()
     .duration(100)
-    .ease("linear")
+    .ease("quad")
     .attr("r", 0)
     .remove();
     // transition -- move to proper widths and location
     circles.transition()
     .duration(100)
-    .ease("linear")
+    .ease("quad")
     .attr("cx", function (d) {
       if (!isNaN(d.under18bk_perc)) {
         return xScale(+d.under18bk_perc);
@@ -426,11 +441,15 @@ console.log("NO FLORIDA", dataflor);
 
     d3.select("line#xmean").transition()
         .attr("x1", xScale(xmean))
-        .attr("x2", xScale(xmean));
+        .attr("x2", xScale(xmean))
+        .duration(100)
+        .ease("quad");
 
     d3.select("line#ymean").transition()
       .attr("y1", yScale(ymean))
-      .attr("y2", yScale(ymean));
+      .attr("y2", yScale(ymean))
+      .duration(100)
+      .ease("quad");
 
 
   } // end of draw function
@@ -463,15 +482,6 @@ console.log("NO FLORIDA", dataflor);
   function getMean(data, column) {
       return d3.sum(data, function(d) { return +d[column]});
   }
-
-  /*function remove_nulls(yearData, input) {
-  // we are assuming empty strings and 0's are not graphable
-    return yearData.filter(function(d) {
-      if (d[input] !== "undefined" && d[input] !== "" && d[input] !== "0" && +d[input] !==0 ) {
-          return d;
-        }
-    });
-}*/
 
 
 })();

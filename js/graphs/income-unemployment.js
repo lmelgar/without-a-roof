@@ -29,9 +29,54 @@ Scatter: median income & unemployment
   .domain([0, 22])
   .range([0, 22]);
 
-  var dotOpacity = .7;
+  var dotOpacity = .6;
   var startYear = 2005,
   filterValue = 2005;
+
+  //legend meaning
+  var svgLegend;
+
+  svgLegend = d3.select("#legend1").append("svg")
+        .attr("height",55)
+        .attr("width", 300);
+
+  svgLegend.append("circle")
+        .attr("r", 7)
+        .attr("cy", 15)
+        .attr("cx", 10)
+        .attr("fill", "rgb(184,92,87)")
+        .attr("opacity", .6);
+
+  svgLegend.append("text")
+      .attr("y", 20)
+      .attr("x", 22)
+      .attr("class", "redLegend")
+      .text("Counties with highest percentage");
+  svgLegend.append("text")
+      .attr("y", 40)
+      .attr("x", 22)
+      .attr("class", "redLegend")
+      .text("of homeless students");
+
+var svgAvg;
+
+svgAvg = d3.select("#avg1").append("svg")
+        .attr("height", 30)
+        .attr("width", 300);
+
+svgAvg.append("line")
+      .attr("class", "svgAvg")
+      .attr("x1", 0)
+      .attr("x2", 16)
+      .attr("y1", 16)
+      .attr("y2", 16);
+
+
+svgAvg.append("text")
+          .attr("y",20)
+          .attr("x", 22)
+          .attr("class", "redLegend")
+          .text("Average");
 
   var myTooltip2 = d3.select("body")
    .append("div")
@@ -52,6 +97,7 @@ Scatter: median income & unemployment
   var xAxis = d3.svg.axis()
   .scale(xScale)
   .orient("bottom")
+  .tickFormat(function(d) { return parseInt(d, 10) + "%"; })
   .ticks(5);
 
   var yAxis = d3.svg.axis()
@@ -104,11 +150,24 @@ Scatter: median income & unemployment
 
     console.log("datos", data);
 
-    var bycounty = d3.nest()
-       .key(function (d) {
-         return d.county;
-       })
-       .entries(data);
+    var dataflor = [];
+				  data.forEach(function (d) {
+				      if (d.select === "ok") {
+				      dataflor.push(d);
+				        }
+				      });
+
+console.log("NO FLORIDA", dataflor);
+
+
+              var bycounty = d3.nest()
+                 .key(function (d) {
+                   return d.county;
+                 })
+                 .entries(dataflor);
+
+    console.log("BY COUNTIES", bycounty);
+
 
     /*dropdown*/
     var options = dropDown.selectAll("option")
@@ -125,55 +184,20 @@ Scatter: median income & unemployment
       displayOthers = this.checked ? "inline" : "none";
       display = this.checked ? "none" : "inline";
 
-    /*d3.selectAll("circles").classed("selected", false);
-    d3.select("circle#" + selected).classed("selected", true);*/
-
-    /*circles.on("click", function () {
-        d3.select(".selected").classed("selected", false);
-        d3.select(this).classed("selected", true);
-
-        })
-
-      d3.selectAll("circle").classed("selected", false);
-							circles.classed("selected", true);*/
-
-
       if(selected == 'All'){
         svg.selectAll(".dots")
             .attr("display", display);
       }
-      else{
-        svg.selectAll(".dots")
-            .filter(function(d) {return selected != d.county;})
-            .attr("display", display)
-            .attr("fill", function (d) {
-              if (d.selection == "Top") {
-                return "rgb(184,92,87)";
-              }
-              else {
-                return "#BFBFBF";
-              }
-            })
-            .attr("opacity", function (d) {
-              if ((d.unemployment) && (d.median_income)) {
-                return dotOpacity;
-              } else {
-                return 0;
-              }
-            });
+      else {
 
+        svg.selectAll(".dots").classed("dotselected", false);
         svg.selectAll(".dots")
             .filter(function(d) {return selected == d.county;})
             .attr("display", display)
-            .attr("opacity", 1)
-            .attr("stroke-width", 1.5)
-            .attr("stroke-opacity", 0.7)
-            .attr("stroke", "black")
-            .attr("opacity", 1)
-            .style("fill", "#D9B26E");
+            .classed("dotselected", true);
       }
-  });
 
+  });
     d3.select(window).on('resize', resize);
 
     function resize() {
@@ -208,14 +232,7 @@ Scatter: median income & unemployment
     })
     .map(data, d3.map);
 
-    nest2013 = d3.nest()
-    .key(function (d) {
-      return d.county;
-    })
-    .map(data, d3.map);
-
     console.log("NEST", nest);
-    console.log("nest2013", nest2013);
 
 
     /*---------------------------------------------------------------------
@@ -235,7 +252,7 @@ Scatter: median income & unemployment
       .attr("dy", "1em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("Unemployment (%)");
+      .text("Unemployment");
 
       svg.append("g")
       .attr("class", "y axis")
@@ -249,7 +266,7 @@ Scatter: median income & unemployment
       .attr("dy", "0.2em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("Median income");
+      .text("Household median income");
     }
 
 
@@ -263,6 +280,12 @@ Scatter: median income & unemployment
       var yearData = nest.get(year);
       console.log(yearData);
 
+      var xmean = getMean(yearData, "flor_unemp");
+      var ymean = getMean(yearData, "flor_medianincome");
+
+      console.log("MEAN1", xmean);
+      console.log("MEAN2", ymean);
+
       /*---------------------------------------------------------------------
       Circles
       ---------------------------------------------------------------------*/
@@ -270,7 +293,10 @@ Scatter: median income & unemployment
       .data(yearData)
       .enter()
       .append("circle")
-      .attr("class", "dots");
+      .attr("class", "dots")
+      .attr("id", function(d) {
+        return d.county;
+      });
 
       circles.attr("cx", function (d) {
         if (!isNaN(d.unemployment)) {
@@ -286,7 +312,7 @@ Scatter: median income & unemployment
         if (!isNaN(d.perc_homeless)) {
           return dotRadius(d.perc_homeless);
         }
-      }) // you might want to increase your dotRadius
+      })
       .attr("fill", function (d) {
         if (d.selection == "Top") {
           return "rgb(184,92,87)";
@@ -309,6 +335,21 @@ Scatter: median income & unemployment
       .style('cursor','pointer');
 
 
+      var ymeanline = svg.append("line")
+        .attr("class", "meanline")
+        .attr("id", "ymean1")
+        .attr("x1", margin.left)
+        .attr("x2", width - margin.right)
+        .attr("y1", yScale(ymean))
+        .attr("y2", yScale(ymean));
+
+      var xmeanline = svg.append("line")
+        .attr("class", "meanline")
+        .attr("id", "xmean1")
+        .attr("x1", xScale(xmean))
+        .attr("x2", xScale(xmean))
+        .attr("y1", margin.top)
+        .attr("y2", height - margin.bottom);
 
     }
 
@@ -319,7 +360,6 @@ Scatter: median income & unemployment
 
     drawAxes();
     drawScatter(startYear);
-    /*setColorDomain();*/
     drawSlider();
 
   });
@@ -331,10 +371,18 @@ Scatter: median income & unemployment
   function redraw(year) {
 
     var year = year;
+    var yearData = nest.get(year);
     console.log(nest.get(year));
     var circles = svg.selectAll("circle.dots")
-    .data(nest.get(year));
+    .data(yearData);
+
     console.log(svg);
+
+    var xmean = getMean(yearData, "flor_unemp");
+    var ymean = getMean(yearData, "flor_medianincome");
+
+    console.log("MEANVA1", xmean);
+    console.log("MEANVA2", ymean);
 
     console.log(circles);
 
@@ -357,7 +405,7 @@ Scatter: median income & unemployment
     .ease("exp")
     .attr("r", 0)
     .remove();
-    // transition -- move to proper widths and location
+
     circles.transition()
     .duration(100)
     .ease("quad")
@@ -375,7 +423,7 @@ Scatter: median income & unemployment
       if (!isNaN(d.perc_homeless)) {
         return dotRadius(d.perc_homeless);
       }
-    }) // you might want to increase your dotRadius
+    })
     .attr("fill", function (d) {
       if (d.selection == "Top") {
         return "rgb(184,92,87)";
@@ -391,6 +439,18 @@ Scatter: median income & unemployment
         return 0;
       }
     });
+
+    d3.select("line#xmean1").transition()
+        .attr("x1", xScale(xmean))
+        .attr("x2", xScale(xmean))
+        .duration(100)
+        .ease("quad");
+
+    d3.select("line#ymean1").transition()
+      .attr("y1", yScale(ymean))
+      .attr("y2", yScale(ymean))
+      .duration(100)
+      .ease("quad");
 
   } // end of draw function
 
@@ -410,11 +470,12 @@ Scatter: median income & unemployment
   .attr("dy", "1em")
   .text(d3.format(".1s"));
 
+
   legend.append("text")
   .attr("class", "sphere")
-  .attr("dy", "-46em")
-  .attr("dx", "-4em")
-  .attr("y", width)
+  .attr("dy", "-40em")
+  .attr("dx", "-8.5em")
+  .attr("y", width - margin.right)
   .attr("x", height / 100)
   .text("Homeless students (%)");
 
@@ -441,6 +502,10 @@ Scatter: median income & unemployment
   }
   function mouseoutFunc(d) {
     return myTooltip2.style("display", "none");  // this sets it to invisible!
+  }
+
+  function getMean(data, column) {
+      return d3.sum(data, function(d) { return +d[column]});
   }
 
 })();

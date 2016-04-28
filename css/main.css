@@ -10,7 +10,6 @@ body {
 
 
 svg {
-  /*    padding: 1em;*/
   border: none;
   outline: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -31,7 +30,6 @@ svg {
   width: 100%;
   height: 100%;
   max-width: 500px;
-  /*height: 70vh;*/
   margin-bottom: 5px;
 }
 
@@ -49,6 +47,14 @@ svg g text.ylabel {
   text-transform: uppercase;
 }
 
+div.divleg {
+  margin-bottom: 0px;
+}
+
+div.divavg {
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
 
 .axis path,
 .axis line {
@@ -62,9 +68,9 @@ svg g text.ylabel {
 line.meanline {
   fill: none;
   stroke: black;
-  stroke-width: 0.5px;
-  stroke-opacity: 0.4;
-  stroke-dasharray: 4,4;
+  stroke-width: 0.6px;
+  stroke-opacity: 0.5;
+  stroke-dasharray: 3,3;
   shape-rendering: crispEdges;
 }
 
@@ -80,6 +86,22 @@ line.meanline {
   font-weight: 300;
   font-size: 12px;
   fill: rgba(136,136,136,1);
+}
+
+text.sphere {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  fill: rgba(136,136,136,1);
+}
+
+.ball text {
+
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  font-size: 110px;
+  fill: rgba(136,136,136,1);
+
 }
 
 .myTooltip2 {
@@ -105,9 +127,21 @@ line.meanline {
 }
 
 .legend text {
-  fill: #777;
-  font: 9px sans-serif;
+  font-family: "Open Sans", sans-serif;
+  fill: rgba(136,136,136,1);
+  font-weight: 300;
+  font: 11px sans-serif;
   text-anchor: middle;
+}
+
+
+line.svgAvg {
+  fill: none;
+  stroke: black;
+  stroke-width: 0.6px;
+  stroke-opacity: 0.5;
+  stroke-dasharray: 3,3;
+  shape-rendering: crispEdges;
 }
 
 em {

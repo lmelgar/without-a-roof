@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------
-Scatter: median income & under18hisp_perc
+Scatter: homeless perc & under18hisp_perc
 
 This graphic is based on a project by HALINA MADER: http://hmader.github.io/fertility-mortality/index.html
 She is really talented. In case you wanna see what she can do: http://halinamader.com/
@@ -26,11 +26,58 @@ She is really talented. In case you wanna see what she can do: http://halinamade
   var dateFormat = d3.time.format("%Y");
   var year = [];
   var nest = [];
-  var nest2013 = [];
 
   var dotRadius = 7;
 
-  var dotOpacity = .7;
+
+  //legend meaning
+  var svgLegend;
+
+  svgLegend = d3.select("#legend9").append("svg")
+        .attr("height",55)
+        .attr("width", 300);
+
+  svgLegend.append("circle")
+        .attr("r", 7)
+        .attr("cy", 15)
+        .attr("cx", 10)
+        .attr("fill", "rgb(184,92,87)")
+        .attr("opacity", .6);
+
+  svgLegend.append("text")
+      .attr("y", 20)
+      .attr("x", 22)
+      .attr("class", "redLegend")
+      .text("Counties with highest percentage");
+  svgLegend.append("text")
+      .attr("y", 40)
+      .attr("x", 22)
+      .attr("class", "redLegend")
+      .text("of homeless students");
+
+var svgAvg;
+
+svgAvg = d3.select("#avg9").append("svg")
+        .attr("height", 30)
+        .attr("width", 300);
+
+svgAvg.append("line")
+      .attr("class", "svgAvg")
+      .attr("x1", 0)
+      .attr("x2", 16)
+      .attr("y1", 16)
+      .attr("y2", 16);
+
+
+svgAvg.append("text")
+          .attr("y",20)
+          .attr("x", 22)
+          .attr("class", "redLegend")
+          .text("Average");
+
+
+
+  var dotOpacity = .6;
   var startYear = 2005,
   filterValue = 2005;
 
@@ -53,17 +100,19 @@ She is really talented. In case you wanna see what she can do: http://halinamade
   var xAxis = d3.svg.axis()
   .scale(xScale)
   .orient("bottom")
-  .ticks(5);
+  .ticks(5)
+  .tickFormat(function(d) { return parseInt(d, 10) + "%"; });
 
   var yAxis = d3.svg.axis()
   .scale(yScale)
   .ticks(5)
-  .tickFormat(d3.format("s"))
+  .tickFormat(function(d) { return parseInt(d, 10) + "%"; })
   .orient("left");
 
 
   xScale.domain([0, xMax]);
   yScale.domain([yMax, 0 -1]);
+
 
   svg = d3.select("#hisp18hom").append("svg")
   .attr("viewBox", "0 0 " + width + " " + height )
@@ -105,12 +154,24 @@ She is really talented. In case you wanna see what she can do: http://halinamade
 
     console.log("datos", data);
 
+    var dataflor = [];
+				  data.forEach(function (d) {
+				      if (d.select === "ok") {
+				      dataflor.push(d);
+				        }
+				      });
 
-    var bycounty = d3.nest()
-       .key(function (d) {
-         return d.county;
-       })
-       .entries(data);
+console.log("NO FLORIDA", dataflor);
+
+
+              var bycounty = d3.nest()
+                 .key(function (d) {
+                   return d.county;
+                 })
+                 .entries(dataflor);
+
+    console.log("BY COUNTIES", bycounty);
+
 
     /*dropdown*/
     var options = dropDown.selectAll("option")
@@ -131,36 +192,15 @@ She is really talented. In case you wanna see what she can do: http://halinamade
         svg.selectAll(".dots")
             .attr("display", display);
       }
-      else{
-        svg.selectAll(".dots")
-            .filter(function(d) {return selected != d.county;})
-            .attr("display", display)
-            .attr("fill", function (d) {
-              if (d.selection == "Top") {
-                return "rgb(184,92,87)";
-              }
-              else {
-                return "#BFBFBF";
-              }
-            })
-            .attr("opacity", function (d) {
-              if ((d.under18hisp_perc) && (d.perc_homeless)) {
-                return dotOpacity;
-              } else {
-                return 0;
-              }
-            });
+      else {
 
+        svg.selectAll(".dots").classed("dotselected", false);
         svg.selectAll(".dots")
             .filter(function(d) {return selected == d.county;})
             .attr("display", display)
-            .attr("opacity", 1)
-            .attr("stroke-width", 1.5)
-            .attr("stroke-opacity", 0.7)
-            .attr("stroke", "black")
-            .attr("opacity", 1)
-            .style("fill", "#D9B26E");
+            .classed("dotselected", true);
       }
+
   });
 
     d3.select(window).on('resize', resize);
@@ -197,14 +237,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
     })
     .map(data, d3.map);
 
-    nest2013 = d3.nest()
-    .key(function (d) {
-      return d.county;
-    })
-    .map(data, d3.map);
-
     console.log("NEST", nest);
-    console.log("nest2013", nest2013);
 
 
     /*---------------------------------------------------------------------
@@ -224,7 +257,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .attr("dy", "1em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("Hispanics under 18 (%)");
+      .text("Hispanics under 18");
 
       svg.append("g")
       .attr("class", "y axis")
@@ -238,9 +271,8 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .attr("dy", "0.2em")
       .style("text-anchor", "end")
       .attr("class", "label_sca")
-      .text("Homeless Students (%)");
+      .text("Homeless students");
     }
-
 
 
     /*--------------------------------------------------------------------------
@@ -252,6 +284,12 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       var yearData = nest.get(year);
       console.log(yearData);
 
+      var xmean = getMean(yearData, "flor_18hisp");
+      var ymean = getMean(yearData, "flor_perc_hom");
+
+      console.log("MEAN1", xmean);
+      console.log("MEAN2", ymean);
+
       /*---------------------------------------------------------------------
       Circles
       ---------------------------------------------------------------------*/
@@ -259,7 +297,11 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .data(yearData)
       .enter()
       .append("circle")
-      .attr("class", "dots");
+      .attr("class", "dots")
+      .attr("id", function(d) {
+        return d.county;
+      });
+
 
       circles.attr("cx", function (d) {
         if (!isNaN(d.under18hisp_perc)) {
@@ -271,7 +313,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
           return yScale(+d.perc_homeless);
         }
       })
-      .attr("r", dotRadius) // you might want to increase your dotRadius
+      .attr("r", dotRadius)
       .attr("fill", function (d) {
         if (d.selection == "Top") {
           return "rgb(184,92,87)";
@@ -294,6 +336,21 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       .style('cursor','pointer');
 
 
+      var ymeanline = svg.append("line")
+        .attr("class", "meanline")
+        .attr("id", "ymean9")
+        .attr("x1", margin.left)
+        .attr("x2", width - margin.right)
+        .attr("y1", yScale(ymean))
+        .attr("y2", yScale(ymean));
+
+      var xmeanline = svg.append("line")
+        .attr("class", "meanline")
+        .attr("id", "xmean9")
+        .attr("x1", xScale(xmean))
+        .attr("x2", xScale(xmean))
+        .attr("y1", margin.top)
+        .attr("y2", height - margin.bottom);
 
     }
 
@@ -304,7 +361,6 @@ She is really talented. In case you wanna see what she can do: http://halinamade
 
     drawAxes();
     drawScatter(startYear);
-    /*setColorDomain();*/
     drawSlider();
 
   });
@@ -316,10 +372,19 @@ She is really talented. In case you wanna see what she can do: http://halinamade
   function redraw(year) {
 
     var year = year;
+
+    var yearData = nest.get(year);
     console.log(nest.get(year));
     var circles = svg.selectAll("circle.dots")
-    .data(nest.get(year));
+    .data(yearData);
+
     console.log(svg);
+
+    var xmean = getMean(yearData, "flor_18hisp");
+    var ymean = getMean(yearData, "flor_perc_hom");
+
+    console.log("MEANVA1", xmean);
+    console.log("MEANVA2", ymean);
 
     console.log(circles);
 
@@ -339,10 +404,10 @@ She is really talented. In case you wanna see what she can do: http://halinamade
     circles.exit()
     .transition()
     .duration(100)
-    .ease("exp")
+    .ease("quad")
     .attr("r", 0)
     .remove();
-    // transition -- move to proper widths and location
+
     circles.transition()
     .duration(100)
     .ease("quad")
@@ -356,7 +421,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
         return yScale(+d.perc_homeless);
       }
     })
-    .attr("r", dotRadius) // you might want to increase your dotRadius
+    .attr("r", dotRadius)
     .attr("fill", function (d) {
       if (d.selection == "Top") {
         return "rgb(184,92,87)";
@@ -373,14 +438,28 @@ She is really talented. In case you wanna see what she can do: http://halinamade
       }
     });
 
+    d3.select("line#xmean9").transition()
+        .attr("x1", xScale(xmean))
+        .attr("x2", xScale(xmean))
+        .duration(100)
+        .ease("quad");
+
+    d3.select("line#ymean9").transition()
+      .attr("y1", yScale(ymean))
+      .attr("y2", yScale(ymean))
+      .duration(100)
+      .ease("quad");
+
+
   } // end of draw function
+
 
 
   function mouseoverFunc(d) {
     myTooltip2
     .style("display", null) // this removes the display none setting from it
     .html("<p>" + "<span>" + d.county + "</span>" +
-    "<br>Homeless students: " + "<em>" + d.perc_homeless + "%</em>" +
+    "<br>Homeless students: " + "<em>" + (d.perc_homeless) + "%</em>" +
     "<br>Hispanics under 18: <em>" + d.under18hisp_perc + "%</em>" + "</p>");
 
 
@@ -391,7 +470,6 @@ She is really talented. In case you wanna see what she can do: http://halinamade
 };
   }
   function mousemoveFunc(d) {
-    //console.log("events", window.event, d3.event);
     myTooltip2
     .style("top", (d3.event.pageY - 10) + "px" )
     .style("left", (d3.event.pageX + 15) + "px");
@@ -399,5 +477,10 @@ She is really talented. In case you wanna see what she can do: http://halinamade
   function mouseoutFunc(d) {
     return myTooltip2.style("display", "none");  // this sets it to invisible!
   }
+
+  function getMean(data, column) {
+      return d3.sum(data, function(d) { return +d[column]});
+  }
+
 
 })();

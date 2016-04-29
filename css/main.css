@@ -175,16 +175,11 @@ opacity: 0.5;
 opacity: 0.5;
 }
 
-.selected {
-   opacity: 1;
-   stroke-width: 1.5;
-   stroke-opacity: 0.7;
-   stroke: black;
-   fill: #D9B26E;
-}
-
 .dotselected {
-  fill: black;
+  fill: #D9B26E;
+  opacity: 1;
+  stroke-width: 1.5;
+  stroke: black;
 }
 
 #Florida {

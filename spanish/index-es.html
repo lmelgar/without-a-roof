@@ -27,7 +27,7 @@
 
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
               <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-            </button> <a class="navbar-brand" href="index-es.html">At School Without a Roof</a>
+            </button> <a class="navbar-brand" href="index-es.html">Bajo el techo de la escuela</a>
           </div>
 
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -217,7 +217,7 @@
           <p>De esos más de 71.000 estudiantes sin techo, el 10.6% vivía solo, sin la supervisión de un adulto. El 17.8% tenía alguna discapacidad y el 10% tenía dificultades para “hablar, leer, escribir o entender el inglés”, lo que podría hacerles fracasar en la escuela.
           </p>
 
-          <p>En muchos de los estados donde hay altos porcentajes de estudiantes sin hogar, la presencia de afro americanos e hispanos es alta.</p>
+          <p>En muchos de los estados donde hay altos porcentajes de estudiantes sin hogar, la presencia de afroamericanos e hispanos es alta.</p>
 
       </div>
       </div>
@@ -231,14 +231,18 @@
       </div>
       <div class="col-md-8"  id="vis-wrap">
         <div class="intro">
-        <p>Porcentaje de estudiantes sin techo entre el total de alumnos matriculados y menores afro americanos. De 2005 a 2013.
+        <p>Porcentaje de estudiantes sin techo entre el total de alumnos matriculados y menores afroamericanos. De 2005 a 2013.
         </p>
+        </div>
+        <div id="legend8" class="divleg">
+        </div>
+        <div id="avg8" class="divavg">
         </div>
         <div id="filter8">
             <p class="elect">Condados</p>
         </div>
 
-            <div id="vis8" class="vis"></div>
+            <div id="afram18hom" class="vis"></div>
             <div id="slider8"></div>
       </div>
       <div class="col-md-2">
@@ -256,11 +260,15 @@
             <p>Porcentaje de estudiantes sin techo entre el total de alumnos matriculados y menores hispanos. De 2005 a 2013.
             </p>
           </div>
+          <div id="legend9" class="divleg">
+          </div>
+          <div id="avg9" class="divavg">
+          </div>
           <div id="filter9">
               <p class="elect">Condados</p>
           </div>
 
-              <div id="vis9" class="vis"></div>
+              <div id="hisp18hom" class="vis"></div>
               <div id="slider9"></div>
         </div>
         <div class="col-md-2">
@@ -313,11 +321,15 @@
       <p>Ingreso promedio por hogar, en miles de dólares, y porcentaje de desempleo. De 2005 a 2013.
       </p>
       </div>
+      <div id="legend1" class="divleg">
+      </div>
+      <div id="avg1" class="divavg">
+      </div>
       <div id="filter">
           <p class="elect">Condados</p>
       </div>
 
-          <div id="vis1" class="vis"></div>
+          <div id="incunemp" class="vis"></div>
           <div id="slider"></div>
     </div>
     <div class="col-md-3">
@@ -420,12 +432,7 @@
       </p>
       </div>
       </p>
-        <div id="filter3">
-            <p class="elect">Condados</p>
-        </div>
-
-            <div id="vis3" class="vis"></div>
-            <div id="slider3"></div>
+            <div id="incstamp" class="vis"></div>
       </div>
       <div class="col-md-2">
       </div>
@@ -436,7 +443,7 @@
   <div class="col-md-3 col-sm-2">
   </div>
   <div class="col-md-6 col-sm-8">
-    <p>Un gran porcentaje de niños de los condados de Hamilton, Gadsden, Putnam y Madison recibió sellos de comida entre 2005 y 2013. En esas zonas, más de un cuarto de los menores de edad son afro americanos. En el caso de Gadsden esa cifra es superior al 60%.
+    <p>Un gran porcentaje de niños de los condados de Hamilton, Gadsden, Putnam y Madison recibió sellos de comida entre 2005 y 2013. En esas zonas, más de un cuarto de los menores de edad son afroamericanos. En el caso de Gadsden esa cifra es superior al 60%.
     </p>
   </div>
   <div class="col-md-3 col-sm-2">
@@ -453,11 +460,17 @@
         <p>Porcentaje de menores afroamericanos y porcentaje del promedio de niños que recibieron sellos de comida mensualmente. De 2005 a 2013.
         </p>
         </div>
+        <div id="legend5" class="divleg">
+
+        </div>
+        <div id="avg5" class="divavg">
+
+        </div>
         <div id="filter5">
             <p class="elect">Condados</p>
         </div>
 
-            <div id="vis5" class="vis"></div>
+            <div id="afam18stamp" class="vis"></div>
             <div id="slider5"></div>
       </div>
       <div class="col-md-2">
@@ -487,11 +500,17 @@
         <p>Porcentaje de menores hispanos y porcentaje del promedio de niños que recibieron sellos de comida mensualmente. De 2005 a 2013.
         </p>
         </div>
+        <div id="legend4" class="divleg">
+
+        </div>
+        <div id="avg4" class="divavg">
+
+        </div>
         <div id="filter4">
             <p class="elect">Condados</p>
         </div>
 
-            <div id="vis4" class="vis"></div>
+            <div id="hispstamp" class="vis"></div>
             <div id="slider4"></div>
       </div>
       <div class="col-md-2">
@@ -520,38 +539,47 @@
     <p>El asma y la hiperactividad son los problemas más comunes que acarrea ser un niño sin hogar. También sufren tres veces más “problemas emocionales y de comportamiento, como depresión, ansiedad, problemas del sueño, rechazo y agresión”, según un informe de Child Trends.
     </p>
 
-    <p>También tiene consecuencias académicas. <strong>Estos estudiantes son dos veces más propensos a repetir un curso académico, ser expulsados o abandonar el instituto, explica el informe.</strong>.
+    <p>También tiene consecuencias académicas. <strong>Estos estudiantes son dos veces más propensos a repetir un curso académico, ser expulsados o abandonar el instituto</strong>, explica el informe.
     </p>
 
-    <p>El Institute for Children, Poverty &amp; Homelessness descubrió que, durante el curso 2013-2014, solo el 17% de los estudiantes sin techo neoyorquinos alcanzó los estándares académicos mínimos en matemáticas. Y recuperar la vivienda no asegura los buenos resultados. Entre los chicos que fueron sin techo, solo el 20% alcanzó un nivel óptimo en matemáticas.
-    </p>
+    <div class="im-centered">
+      <div class="row">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8"  id="vis-wrap">
+          <div class="intro">
+          <p>Porcentaje de estudiantes que obtuvieron 3 o más en matemáticas. Porcentaje del promedio de niños que recibieron sellos de comida mensualmente. Desde 2005 a 2013.</p>
+        </div>
+         <div id="legend7" class="divleg">
+         </div>
+         <div id="avg7" class="divavg">
+         </div>
+          <div id="filter7">
+              <p class="elect">Condados</p>
+          </div>
 
+              <div id="mathsstamp" class="vis"></div>
+              <div id="slider7"></div>
+        </div>
+        <div class="col-md-2">
+        </div>
+      </div>
+    </div>
   </div>
   <div class="col-md-3 col-sm-2">
   </div>
   </div>
 
-  <div class="im-centered">
-    <div class="row">
-      <div class="col-md-2">
-      </div>
-      <div class="col-md-8"  id="vis-wrap">
-        <div class="intro">
-        <p>Porcentaje de estudiantes que obtuvieron 3 o más en matemáticas. Porcentaje del promedio de niños que recibieron sellos de comida mensualmente. Desde 2005 a 2013.</p>
-      </div>
-        <div id="filter7">
-            <p class="elect">Condados</p>
-        </div>
-
-            <div id="vis7" class="vis"></div>
-            <div id="slider7"></div>
-      </div>
-      <div class="col-md-2">
-      </div>
-    </div>
+  <div class="row">
+  <div class="col-md-3 col-sm-2">
   </div>
-
-
+  <div class="col-md-6 col-sm-8">
+    <p>El Institute for Children, Poverty &amp; Homelessness descubrió que, durante el curso 2013-2014, solo el 17% de los estudiantes sin techo neoyorquinos alcanzó los estándares académicos mínimos en matemáticas. Y recuperar la vivienda no asegura los buenos resultados. Entre los chicos que fueron sin techo, solo el 20% alcanzó un nivel óptimo en matemáticas.
+    </p>
+  </div>
+  <div class="col-md-3 col-sm-2">
+  </div>
+  </div>
 
   <div class="row">
     <div class="col-md-3">
@@ -580,14 +608,14 @@
   <script src="https://d3js.org/queue.v1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/1.9.0/d3-legend.js"></script>
   <script src="js-es/chroniton-only.js"></script>
-  <script src="js-es/graphs/scatter1-es.js"></script>
-  <script src="js-es/graphs/scatter3-es.js"></script>
-  <script src="js-es/graphs/scatter4-es.js"></script>
-  <script src="js-es/graphs/scatter5-es.js"></script>
-  <script src="js-es/graphs/scatter7-es.js"></script>
+  <script src="js-es/graphs/ingreso-desempleo.js"></script>
+  <script src="js-es/graphs/cambioingreso-sellos.js"></script>
+  <script src="js-es/graphs/hispanos-sellos.js"></script>
+  <script src="js-es/graphs/afroamericanos-sellos.js"></script>
+  <script src="js-es/graphs/matematicas-sellos.js"></script>
   <script src="js-es/graphs/map-es.js"></script>
-  <script src="js-es/graphs/scatter8-es.js"></script>
-  <script src="js-es/graphs/scatter9-es.js"></script>
+  <script src="js-es/graphs/afroamericanos-sinhogar.js"></script>
+  <script src="js-es/graphs/hispanos-sinhogar.js"></script>
 
 
 </body>

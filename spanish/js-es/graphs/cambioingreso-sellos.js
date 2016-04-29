@@ -1,5 +1,3 @@
-
-
 (function() {
 
 
@@ -32,7 +30,7 @@
       var yAxis = d3.svg.axis()
       .scale(yScale)
       .ticks(4)
-      .tickFormat(function(d) { return parseInt(d, 10) + "%"; })
+      .tickFormat(d3.format("s"))
       .orient("left");
 
       //Configure line generator
@@ -56,7 +54,7 @@
 
 
       //Load data
-      d3.csv("data/incomeStamps.csv", function(error, data) {
+      d3.csv("../data/incomeStamps.csv", function(error, data) {
         var years = ["2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"];
 
           //Loop once for each row in data
@@ -140,7 +138,7 @@
               })
               .attr("r", 1.5)
               .attr("fill", "rgba(136,136,136,1)")
-              .style("opacity", 0); // this is optional - if you want visible dots or not!
+              .style("opacity", 0);
 
         //Axes
         svg.append("g")
@@ -154,7 +152,7 @@
         .attr("dy", "1em")
         .style("text-anchor", "end")
         .attr("id", "label_line")
-        .text("Year (from 2006 to 2013)");
+        .text("Año (de 2006 a 2013)");
 
       svg.append("g")
         .attr("class", "y axis")
@@ -163,20 +161,20 @@
         .call(yAxis);
 
         svg.append("text")
-            .attr("transform", "translate(" + (margin.right + margin.left + 155) + ",0)")
+            .attr("transform", "translate(" + (margin.right + margin.left + 110) + ",0)")
             .attr("dy", "1em")
             .attr("dx", "3em")
   					.attr("text-anchor", "start")
             .attr("id", "country_label")
-  					.text("Children receiving food stamps ");
+  					.text("Niños que recibieron sellos de comida");
 
         svg.append("text")
-            .attr("transform", "translate(" + (margin.right + margin.left + 150) + ",0)")
-            .attr("dy", "18.9em")
+            .attr("transform", "translate(" + (margin.right + margin.left + 115) + ",0)")
+            .attr("dy", "18.4em")
             .attr("dx", "3em")
             .attr("text-anchor", "start")
             .attr("id", "country_label2")
-            .text("Yearly change in median income ");
+            .text("Cambio anual en el ingreso por hogar");
 
         var zeroLine = svg.append("line")
                 .attr("class", "zeroline")

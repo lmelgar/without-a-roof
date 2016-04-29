@@ -170,8 +170,6 @@
             .attr("id", "country_label")
   					.text("Children receiving food stamps (%)");
 
-
-
         svg.append("text")
             .attr("transform", "translate(" + (margin.right + margin.left + 125) + ",0)")
             .attr("dy", "18.9em")
@@ -179,6 +177,13 @@
             .attr("text-anchor", "start")
             .attr("id", "country_label2")
             .text("Yearly change in median income (%)");
+
+        var zeroLine = svg.append("line")
+                .attr("class", "zeroline")
+                .attr("x1", margin.left)
+                .attr("x2", width - margin.right)
+                .attr("y1", 293.5)
+                .attr("y2", 293.5);
 
 
         circles

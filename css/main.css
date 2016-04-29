@@ -144,6 +144,16 @@ line.svgAvg {
   shape-rendering: crispEdges;
 }
 
+line.zeroline {
+  fill: none;
+  stroke: black;
+  stroke-width: 0.6px;
+  stroke-opacity: 0.5;
+  stroke-dasharray: 1,1;
+  shape-rendering: crispEdges;
+
+}
+
 em {
   font-family: "Open Sans", sans-serif;
   font-style: normal;

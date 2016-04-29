@@ -70,11 +70,10 @@ svgAvg.append("line")
 
 
 svgAvg.append("text")
-          .attr("y",20)
-          .attr("x", 22)
-          .attr("class", "redLegend")
-          .text("Average");
-
+      .attr("y",20)
+      .attr("x", 22)
+      .attr("class", "redLegend")
+      .text("Average");
 
 
   var dotOpacity = .6;
@@ -352,6 +351,13 @@ console.log("NO FLORIDA", dataflor);
         .attr("x2", xScale(xmean))
         .attr("y1", margin.top)
         .attr("y2", height - margin.bottom);
+
+      var zeroLine = svg.append("line")
+              .attr("class", "zeroline")
+              .attr("x1", margin.left)
+              .attr("x2", width - margin.right)
+              .attr("y1", 375.5)
+              .attr("y2", 375.5);
 
     }
 

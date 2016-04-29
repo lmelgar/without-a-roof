@@ -451,6 +451,14 @@ console.log("NO FLORIDA", dataflor);
       .ease("quad");
 
 
+    var zeroLine = svg.append("line")
+              .attr("class", "zeroline")
+              .attr("x1", margin.left)
+              .attr("x2", width - margin.right)
+              .attr("y1", 375.5)
+              .attr("y2", 375.5);
+
+
   } // end of draw function
 
 

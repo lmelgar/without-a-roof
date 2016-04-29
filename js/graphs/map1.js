@@ -13,7 +13,7 @@ This code is based on http://bl.ocks.org/CafeConVega/65d4fb217d2127e30e37093c3a1
 
   // use a d3 map to make a lookup table for the string in the chart title
   var chartLabels = d3.map();
-    chartLabels.set("homeless_pop", "Total homeless student");
+    chartLabels.set("homeless_pop", "Total homeless students");
     chartLabels.set("perc_homeless", "Percentage of homeless students");
 
 
@@ -176,12 +176,12 @@ This code is based on http://bl.ocks.org/CafeConVega/65d4fb217d2127e30e37093c3a1
       if (current == "homeless_pop") {
       myTooltip2
         .style("display", null) // this removes the display none setting from it
-        .html("<p><em>" + data.county + "<br></em>In 2013, the population of <br> homeless student was <em>" + d3.format(",.0f")(data[current]) + "</em></p>");
+        .html("<p><em>" + data.county + "<br></em>In 2013, the population of <br> homeless students was <em>" + d3.format(",.0f")(data[current]) + "</em></p>");
       } else {
 
       myTooltip2
       .style("display", null) // this removes the display none setting from it
-      .html("<p><em>" + data.county + "<br></em>In 2013, the percentage of <br> homeless student was <em>" + data[current] + "%</em></p>");
+      .html("<p><em>" + data.county + "<br></em>In 2013, the percentage of <br> homeless students was <em>" + data[current] + "%</em></p>");
     }
     }
 

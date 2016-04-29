@@ -39,7 +39,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
   //legend meaning
   var svgLegend;
 
-  svgLegend = d3.select("#legend4").append("svg")
+  svgLegend = d3.select("#legend7").append("svg")
         .attr("height",55)
         .attr("width", 300);
 
@@ -63,7 +63,7 @@ She is really talented. In case you wanna see what she can do: http://halinamade
 
 var svgAvg;
 
-svgAvg = d3.select("#avg4").append("svg")
+svgAvg = d3.select("#avg7").append("svg")
         .attr("height", 30)
         .attr("width", 300);
 

@@ -39,7 +39,7 @@ This code is based on http://bl.ocks.org/CafeConVega/65d4fb217d2127e30e37093c3a1
   var idLookup = d3.map();
 
   // all our data is a binary 1 or 2 for this dataset.
-  var colorScale = d3.scale.quantize().range(["#EAD4CE", "#DCB2AA", "#CF9389", "#C3776E", "#B85C57"]);
+  var colorScale = d3.scale.quantize().range(["#EEDDD8", "#DCB2AA", "#CF9389", "#C3776E", "#B85C57"]);
 
   // we use queue because we have 2 data files to load.
   queue()
